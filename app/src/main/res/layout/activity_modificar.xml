@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@drawable/fundo_icones"
     tools:context=".ModificarActivity">
 
     <LinearLayout
@@ -24,6 +24,8 @@
             style="@style/voltar" />
 
         <TextView
+
+            style="@style/NormalText"
             android:id="@+id/textView8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,6 +35,8 @@
             android:text="Nova Senha" />
 
         <EditText
+
+            android:background="@drawable/input"
             android:id="@+id/novaSenhaEditText"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
@@ -43,7 +47,9 @@
             android:password="true" />
 
         <TextView
+
             android:id="@+id/textView9"
+            style="@style/NormalText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -52,6 +58,8 @@
             android:text="Confirmar senha" />
 
         <EditText
+
+            android:background="@drawable/input"
             android:id="@+id/confirmarNovaSenhaEditText"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
@@ -63,11 +71,8 @@
 
         <Button
             android:id="@+id/modificarBtn"
-            android:layout_width="134dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:gravity="center" style="@style/botao"
+            style="@style/botao_primary"
             android:text="Modificar" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

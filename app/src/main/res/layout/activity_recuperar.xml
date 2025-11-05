@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@drawable/fundo_icones"
     tools:context=".RecuperarActivity">
 
     <LinearLayout
@@ -22,6 +22,7 @@
             style="@style/voltar"/>
 
         <TextView
+            style="@style/NormalText"
             android:id="@+id/textView4"
             android:layout_width="243dp"
             android:layout_height="wrap_content"
@@ -31,6 +32,7 @@
             android:text="Informe seu e-mail, caso exista uma conta associada ao  endereço, enviaremos um  código de recuperação." />
 
         <TextView
+            style="@style/NormalText"
             android:id="@+id/textView7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,6 +42,7 @@
             android:text="Email" />
 
         <EditText
+            android:background="@drawable/input"
             android:id="@+id/emailRecuperarEditView"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
@@ -49,13 +52,9 @@
             android:inputType="textEmailAddress" />
 
         <Button
+            style="@style/botao_primary"
+            android:layout_marginTop="50dp"
             android:id="@+id/recuperarBtn"
-            android:layout_width="231dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="30dp"
-            android:gravity="center"
-            style="@style/botao"
             android:text="Enviar" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
