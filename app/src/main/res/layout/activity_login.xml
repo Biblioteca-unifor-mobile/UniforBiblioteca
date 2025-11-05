@@ -4,15 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
 
-    android:background="@color/modalbackground"
+    android:background="@drawable/fundo_icones"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
     <LinearLayout
-        android:layout_width="410dp"
-        android:layout_height="736dp"
-        android:background="@color/background"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,13 +19,14 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="108dp"
-            android:layout_height="112dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_gravity="center"
             android:layout_marginTop="60dp"
-            app:srcCompat="@drawable/logo_unifor" />
+            app:srcCompat="@drawable/logo" />
 
         <TextView
+            style="@style/NormalText"
             android:id="@+id/matriculaLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,6 +35,7 @@
             android:text="Matricula" />
 
         <EditText
+            android:background="@drawable/input"
             android:id="@+id/login_matricula"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
@@ -45,6 +46,7 @@
             android:inputType="number" />
 
         <TextView
+            style="@style/NormalText"
             android:id="@+id/passwordLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -53,6 +55,7 @@
             android:text="Senha" />
 
         <EditText
+            android:background="@drawable/input"
             android:id="@+id/editTextTextPassword"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
@@ -64,15 +67,12 @@
 
         <Button
             android:id="@+id/entrarBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            style="@style/botao"
-            android:gravity="center"
-            android:text="Entrar"/>
+            style="@style/botao_primary"
+            android:layout_marginTop="50dp"
+            android:text="Entrar" />
 
         <TextView
+            style="@style/LightText"
             android:id="@+id/esqueciSenha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -81,6 +81,7 @@
             android:text="Esqueci minha senha" />
 
         <TextView
+            style="l]"
             android:id="@+id/paraRegistroBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

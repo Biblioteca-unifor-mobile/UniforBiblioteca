@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fundo base -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="@color/botao_borda"
+                android:endColor="@color/botao_fundo"
+               android:angle="90" />
+        </shape>
+    </item>
+
+    <item android:top="0dp" android:bottom="0dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#80FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:angle="90" />
+        </shape>
+    </item>
+</layer-list>
