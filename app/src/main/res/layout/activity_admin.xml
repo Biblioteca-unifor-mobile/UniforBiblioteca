@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/modalbackground"
-    tools:context=".AdminActivity">
+    tools:context=".activity.AdminActivity">
 
     <!-- 🔹 Conteúdo principal: Fragment + menu -->
     <LinearLayout

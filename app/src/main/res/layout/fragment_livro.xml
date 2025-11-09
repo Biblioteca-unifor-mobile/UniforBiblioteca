@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".LivroFragment">
+    tools:context=".fragment.LivroFragment">
 
     <Button
         android:id="@+id/livro_voltar"

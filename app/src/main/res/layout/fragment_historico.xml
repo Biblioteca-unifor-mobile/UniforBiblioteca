@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context=".HistoricoFragment">
+    tools:context=".fragment.HistoricoFragment">
 
     <TextView
         android:id="@+id/textView10"

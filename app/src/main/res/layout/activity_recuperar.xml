@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fundo_icones"
-    tools:context=".RecuperarActivity">
+    tools:context=".activity.RecuperarActivity">
 
     <LinearLayout
         android:layout_width="409dp"
