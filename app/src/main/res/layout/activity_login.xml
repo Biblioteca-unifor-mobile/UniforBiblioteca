@@ -7,7 +7,7 @@
     android:background="@drawable/fundo_icones"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".activity.LoginActivity">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -56,7 +56,7 @@
 
         <EditText
             android:background="@drawable/input"
-            android:id="@+id/editTextTextPassword"
+            android:id="@+id/login_senha"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
