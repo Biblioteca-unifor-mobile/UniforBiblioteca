@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uniforbiblioteca.activity.MainActivity
@@ -17,6 +18,10 @@ import com.example.uniforbiblioteca.rvadapter.EmprestadoAdapter
 
 class HomeFragment : Fragment() {
 
+
+    lateinit var nome: TextView
+
+    lateinit var matricula: TextView
     lateinit var sairBtn: Button
 
     lateinit var recente1: ImageView
@@ -91,6 +96,13 @@ class HomeFragment : Fragment() {
         recente4.setOnClickListener { verLivro() }
         recente5.setOnClickListener { verLivro() }
 
+        matricula = view.findViewById(R.id.home_matricula)
+        nome = view.findViewById(R.id.home_nome)
+
+        matricula.text = "2412819"
+        nome.text = "Olá, ${"João"}"
+
+
         return view
     }
 
@@ -100,9 +112,6 @@ class HomeFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
-
-
-
 
 
     override fun onResume() {
