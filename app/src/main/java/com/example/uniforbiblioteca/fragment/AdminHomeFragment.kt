@@ -19,7 +19,6 @@ class AdminHomeFragment : Fragment() {
     lateinit var sairBtn: Button
     lateinit var nomeLbl: TextView
     lateinit var cargoLbl: TextView
-
     lateinit var greetingLbl: TextView
 
     override fun onCreateView(

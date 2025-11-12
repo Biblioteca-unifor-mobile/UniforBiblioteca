@@ -1,129 +1,62 @@
 package com.example.uniforbiblioteca.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.uniforbiblioteca.rvadapter.AdminAcervoAdapter
-import com.example.uniforbiblioteca.activity.AdminActivity
-import com.example.uniforbiblioteca.dataclass.LivroCardData
 import com.example.uniforbiblioteca.R
+import com.example.uniforbiblioteca.activity.AdminActivity
+import com.example.uniforbiblioteca.api.LivroAPI
+import com.example.uniforbiblioteca.api.RetrofitClient
+import com.example.uniforbiblioteca.dataclass.LivroData
 import com.example.uniforbiblioteca.dialog.AcervoFiltroDialogFragment
+import com.example.uniforbiblioteca.rvadapter.AdminAcervoAdapter
 import com.example.uniforbiblioteca.ui.DialogConfirmarDeletarLivro
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.example.uniforbiblioteca.viewmodel.AcervoViewModel
 
 class AdminAcervo : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
 
-    lateinit var filtroBtn: Button
-    lateinit var newBtn: FloatingActionButton
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: AdminAcervoAdapter
+    private lateinit var filtroBtn: Button
+    private lateinit var newBtn: FloatingActionButton
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    // Retrofit e ViewModel
+    private val livroAPI by lazy {
+        RetrofitClient.create(requireContext()).create(LivroAPI::class.java)
+    }
+
+    private val viewModel: AcervoViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return AcervoViewModel(livroAPI) as T
+            }
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = inflater.inflate(R.layout.fragment_admin_acervo, container, false)
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.admin_acervo_rv)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
+        recyclerView = view.findViewById(R.id.admin_acervo_rv)
+        filtroBtn = view.findViewById(R.id.admin_acervo_filtro_button)
         newBtn = view.findViewById(R.id.admin_acervo_fab)
 
-        // Lista de placeholders
-        val livros = listOf(
-            LivroCardData(
-                1,
-                "Livro 1",
-                "Autor 1",
-                "5 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                2,
-                "Livro 2",
-                "Autor 2",
-                "8 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                3,
-                "Livro 3",
-                "Autor 3",
-                "8 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                4,
-                "Livro 4",
-                "Autor 4",
-                "30 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                5,
-                "Livro 5",
-                "Autor 5",
-                "50 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                6,
-                "Livro 6",
-                "Autor 6",
-                "50 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                7,
-                "Livro 7",
-                "Autor 7",
-                "70 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                8,
-                "Livro 8",
-                "Autor 8",
-                "90 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                9,
-                "Livro 9",
-                "Autor 9",
-                "90 dias atrás",
-                "https://placehold.co/200x300/png"
-            )
-        )
-
-        // Adapter
-        val adapter = AdminAcervoAdapter(
-            livros,
-            this::onItemClick,
-            this::onDeleteClicked,
-            this::onEditClicked
-        )
-
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        adapter = AdminAcervoAdapter(emptyList(), ::onItemClick, ::onDeleteClicked, ::onEditClicked)
         recyclerView.adapter = adapter
-
-
-        filtroBtn = view.findViewById(R.id.admin_acervo_filtro_button)
 
         filtroBtn.setOnClickListener {
             val dialog = AcervoFiltroDialogFragment()
@@ -137,35 +70,47 @@ class AdminAcervo : Fragment() {
                 .commit()
         }
 
+        carregarLivros()
 
         return view
     }
 
-    fun onItemClick(livro: LivroCardData){
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.adminFragmentContainer, AdminLivroFragment::class.java, null)
-            .addToBackStack(null)
-            .commit()
+    private fun carregarLivros() {
+        viewModel.carregarLivros(
+            onLoaded = { livros ->
+                Log.d("ADMIN_ACERVO", "Livros carregados: ${livros.size}")
+                adapter.updateData(livros)
+            },
+            onError = { e ->
+                Log.e("ADMIN_ACERVO", "Erro ao carregar livros: ${e.message}")
+            }
+        )
     }
-
-    fun onEditClicked(livro: LivroCardData) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.adminFragmentContainer, AdminEditLivroFragment::class.java, null)
-            .addToBackStack(null)
-            .commit()
-    }
-
-
-    fun onDeleteClicked(livro: LivroCardData) {
-        DialogConfirmarDeletarLivro
-            .newInstance(livro.titulo)
-            .show(parentFragmentManager, "confirmarDeletarLivro")
-    }
-
-
 
     override fun onResume() {
         super.onResume()
         (activity as? AdminActivity)?.changeState("acervo")
+    }
+
+    private fun onItemClick(livro: LivroData) {
+        val fragment = AdminLivroFragment.newInstance(livro)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.adminFragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun onEditClicked(livro: LivroData) {
+        val fragment = AdminEditLivroFragment.newInstance(livro)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.adminFragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun onDeleteClicked(livro: LivroData) {
+        DialogConfirmarDeletarLivro
+            .newInstance(livro)
+            .show(parentFragmentManager, "confirmarDeletarLivro")
     }
 }

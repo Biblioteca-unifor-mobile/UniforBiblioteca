@@ -1,6 +1,5 @@
 package com.example.uniforbiblioteca.activity
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -8,12 +7,10 @@ import androidx.lifecycle.lifecycleScope
 import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.api.LivroAPI
 import com.example.uniforbiblioteca.api.UsuarioAPI
-
-import com.example.uniforbiblioteca.api.RetrofitClient
 import com.example.uniforbiblioteca.dataclass.LivroData
+import com.example.uniforbiblioteca.api.RetrofitClient
 import com.example.uniforbiblioteca.dataclass.Usuario
 import kotlinx.coroutines.launch
-import androidx.core.content.edit
 import com.example.uniforbiblioteca.auth.AuthTokenHandler
 
 class APITestActivity : AppCompatActivity() {
@@ -62,8 +59,6 @@ class APITestActivity : AppCompatActivity() {
             var loginResponse = usuarioAPI.login(loginUser)
 
             Log.d("API_TEST", loginResponse.access_token)
-
-            val sharedPref = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
             val tokenHandler = AuthTokenHandler(this)
             tokenHandler.setToken(loginResponse.access_token)
