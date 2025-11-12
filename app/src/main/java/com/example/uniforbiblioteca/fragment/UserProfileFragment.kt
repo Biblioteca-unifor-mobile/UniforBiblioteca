@@ -116,7 +116,7 @@ class UserProfileFragment : androidx.fragment.app.Fragment() {
         )
 
         // Adapter
-        val adapterReserva = AcervoAdapter(reservados) { livro ->
+        val adapterReserva = AcervoAdapter(emptyList()) { livro ->
 
         }
 

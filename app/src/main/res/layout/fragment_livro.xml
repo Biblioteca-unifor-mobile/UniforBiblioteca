@@ -31,14 +31,14 @@
             android:paddingBottom="24dp">
 
             <ImageView
-                android:id="@+id/capaLivro"
+                android:id="@+id/livro_capa"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
                 android:layout_marginTop="20dp"
                 android:src="@drawable/book_cover_placeholder" />
 
             <TextView
-                android:id="@+id/tipoLivro"
+                android:id="@+id/livro_tipo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -48,7 +48,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tituloLivro"
+                android:id="@+id/livro_titulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -57,42 +57,42 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/autorLivro"
+                android:id="@+id/livro_autor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:text="Autor" />
 
             <TextView
-                android:id="@+id/coautor1Livro"
+                android:id="@+id/livro_coautor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:text="Co-autor 1" />
 
             <TextView
-                android:id="@+id/coautor2Livro"
+                android:id="@+id/livro_coautor2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:text="Co-autor 2" />
 
             <TextView
-                android:id="@+id/edicaoLivro"
+                android:id="@+id/livro_edicao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:text="Edição / Ano de Edição" />
 
             <TextView
-                android:id="@+id/idiomaLivro"
+                android:id="@+id/livro_idioma"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:text="Idioma" />
 
             <TextView
-                android:id="@+id/publicacaoLivro"
+                android:id="@+id/livro_publicacao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
@@ -108,7 +108,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/resumoLivro"
+                android:id="@+id/livro_resumo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
@@ -116,7 +116,7 @@
                 android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque placerat non mi sit amet tincidunt. In gravida purus at augue vehicula, eget mattis lectus cursus. Etiam volutpat velit eu sem blandit auctor. Sed in sodales enim." />
 
             <TextView
-                android:id="@+id/quantidadeLivro"
+                android:id="@+id/livro_quantidade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"

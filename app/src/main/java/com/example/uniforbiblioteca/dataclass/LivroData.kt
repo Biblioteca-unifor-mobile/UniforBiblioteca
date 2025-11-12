@@ -1,8 +1,10 @@
 package com.example.uniforbiblioteca.dataclass
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
-@Serializable
+import java.io.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable as KotlinSerializable
+
+@KotlinSerializable
 data class LivroData(
     @SerialName("_id") var id: String? = null,
     @SerialName("_isbn") var isbn: String? = null,
@@ -18,7 +20,5 @@ data class LivroData(
     @SerialName("_tipo") var tipo: String? = null,
     @SerialName("_numeroExemplares") var numeroExemplares: Int? = null,
     @SerialName("_copies") var copies: List<ExemplarData>? = null
-
-)
-
+) : Serializable
 

@@ -9,25 +9,32 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.uniforbiblioteca.dataclass.LivroCardData
 import com.example.uniforbiblioteca.R
+import com.example.uniforbiblioteca.dataclass.LivroData
 
 class AcervoAdapter(
-    private val books: List<LivroCardData>,
-    private val onItemClick: (LivroCardData) -> Unit
+    private var books: List<LivroData>,
+    private val onItemClick: (LivroData) -> Unit
 ) : RecyclerView.Adapter<AcervoAdapter.AcervoViewHolder>() {
 
     inner class AcervoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleView: TextView = itemView.findViewById(R.id.titulo_card_acervo)
         private val autorView: TextView = itemView.findViewById(R.id.autor_card_acervo)
         private val coverView: ImageView = itemView.findViewById(R.id.imagem_card_acervo)
-        fun bind(livro: LivroCardData) {
+        fun bind(livro: LivroData) {
             titleView.text = livro.titulo
             autorView.text = livro.autor
 
-            Glide.with(itemView.context)
-                .load(livro.image)
-                .into(coverView)
+            if (livro.imageUrl.toBoolean()) {
+                Glide.with(itemView.context)
+                    .load(livro.imageUrl)
+                    .into(coverView)
+            } else {
+                coverView.setImageResource(R.drawable.book_cover_placeholder)
+            }
 
-            itemView.setOnClickListener { onItemClick(livro) }
+            itemView.setOnClickListener {
+                onItemClick(livro)
+            }
         }
     }
 
@@ -42,4 +49,10 @@ class AcervoAdapter(
     }
 
     override fun getItemCount() = books.size
+
+
+    fun updateData(newList: List<LivroData>) {
+        books = newList
+        notifyDataSetChanged()
+    }
 }

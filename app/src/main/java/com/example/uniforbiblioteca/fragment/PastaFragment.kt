@@ -110,7 +110,7 @@ class PastaFragment : androidx.fragment.app.Fragment() {
         )
 
         // Adapter
-        val adapter = AcervoAdapter(livros) { livro ->
+        val adapter = AcervoAdapter(emptyList()) { livro ->
             parentFragmentManager.beginTransaction()
                 .replace(_root_ide_package_.com.example.uniforbiblioteca.R.id.mainFragmentContainer, LivroFragment::class.java, null)
                 .addToBackStack(null)
