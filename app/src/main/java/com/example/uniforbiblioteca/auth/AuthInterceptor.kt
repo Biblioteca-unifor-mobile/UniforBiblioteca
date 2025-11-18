@@ -11,14 +11,16 @@ class AuthInterceptor(
 
     private val rotasPublicas = listOf(
         "/auth/login",
-        "/auth/register"
+        "/auth/register",
+        "/auth/forgot-password",
+        "/auth/verify-code"
     )
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val urlPath = request.url.encodedPath
 
-        val isPublic = rotasPublicas.any { urlPath.startsWith(it) }
+        val isPublic = rotasPublicas.any { urlPath.endsWith(it) }
 
         if (isPublic) {
             return chain.proceed(request)
