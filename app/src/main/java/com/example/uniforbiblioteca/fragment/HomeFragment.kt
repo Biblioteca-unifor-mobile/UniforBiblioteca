@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uniforbiblioteca.activity.MainActivity
 import com.example.uniforbiblioteca.R
+import com.example.uniforbiblioteca.auth.AuthTokenHandler
 import com.example.uniforbiblioteca.dataclass.LivroCardData
 import com.example.uniforbiblioteca.rvadapter.EmprestadoAdapter
 
@@ -29,6 +30,8 @@ class HomeFragment : Fragment() {
     lateinit var recente3: ImageView
     lateinit var recente4: ImageView
     lateinit var recente5: ImageView
+
+    private lateinit var tokenHandler: AuthTokenHandler
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,7 +80,6 @@ class HomeFragment : Fragment() {
             ),
         )
 
-        //
         val adapter = EmprestadoAdapter(livros) { livro ->
             verLivro()
         }
@@ -99,8 +101,13 @@ class HomeFragment : Fragment() {
         matricula = view.findViewById(R.id.home_matricula)
         nome = view.findViewById(R.id.home_nome)
 
-        matricula.text = "2412819"
-        nome.text = "Olá, ${"João"}"
+        tokenHandler = AuthTokenHandler(requireContext())
+
+        val nomeUsuario = tokenHandler.getName()
+        val matriculaUsuario = tokenHandler.getMatricula()
+
+        nome.text = "Olá, ${nomeUsuario ?: "Usuário"}"
+        matricula.text = matriculaUsuario ?: "Matrícula não encontrada"
 
 
         return view
