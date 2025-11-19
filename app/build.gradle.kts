@@ -1,4 +1,5 @@
 import java.util.Properties
+import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.android.application)
@@ -7,14 +8,18 @@ plugins {
     id("kotlinx-serialization")
 }
 
-// ---- LÊ A CHAVE DO local.properties (fora do bloco android!) ----
-val properties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-    properties.load(localPropertiesFile.inputStream())
+// ---- Lê a chave da OpenAI do local.properties, com fallback seguro ----
+val localProps = Properties()
+val localPropsFile = rootProject.file("local.properties")
+if (localPropsFile.exists()) {
+    FileInputStream(localPropsFile).use { localProps.load(it) }
 }
-val openaiKey = properties.getProperty("OPENAI_API_KEY") ?: "YOUR_API_KEY_HERE"
-// ---------------------------------------------------------------
+
+// Fallback: 1) local.properties  2) gradle.properties  3) placeholder
+val openaiKey = localProps.getProperty("OPENAI_API_KEY")
+    ?: project.findProperty("OPENAI_API_KEY") as String?
+    ?: "YOUR_API_KEY_HERE"
+// ---------------------------------------------------------------------
 
 android {
     namespace = "com.example.uniforbiblioteca"
@@ -29,7 +34,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Agora podemos usar a chave aqui
         buildConfigField("String", "OPENAI_API_KEY", "\"$openaiKey\"")
     }
 
