@@ -67,7 +67,7 @@
 
     <Button
         android:id="@+id/confirmar_pedido"
-        style="@style/botao"
+        style="@style/botao_primary"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -77,7 +77,7 @@
 
     <Button
         android:id="@+id/cancelar_pedido"
-        style="@style/botao_neg"
+        style="@style/botao_negativo"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

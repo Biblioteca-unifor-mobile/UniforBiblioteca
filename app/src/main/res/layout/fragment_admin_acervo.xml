@@ -45,6 +45,8 @@
             android:orientation="vertical">
 
             <EditText
+                android:background="@drawable/input"
+                android:layout_marginBottom="10dp"
                 android:id="@+id/admin_acervo_filtro_input"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"

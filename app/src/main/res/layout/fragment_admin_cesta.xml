@@ -44,12 +44,10 @@
             android:layout_marginTop="30dp" />
 
         <Button
+            android:layout_marginTop="20dp"
             android:id="@+id/admin_cesta_continuar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            style="@style/botao"
-            android:backgroundTint="@color/button"
+            style="@style/botao_primary"
             android:text="Continuar" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,6 +15,7 @@
         android:text="Nome da Pasta" />
 
     <EditText
+        android:background="@drawable/input"
         android:id="@+id/input_criar_pasta"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -34,7 +35,7 @@
 
         <Button
             android:id="@+id/confirmar_criar_pasta"
-            style="@style/botao"
+            style="@style/botao_primary"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -43,7 +44,7 @@
 
         <Button
             android:id="@+id/cancelar_criar_pasta"
-            style="@style/botao_neg"
+            style="@style/botao_negativo"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

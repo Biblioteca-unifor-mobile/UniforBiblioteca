@@ -1,9 +1,20 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
     id("kotlinx-serialization")
 }
+
+// ---- LÊ A CHAVE DO local.properties (fora do bloco android!) ----
+val properties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    properties.load(localPropertiesFile.inputStream())
+}
+val openaiKey = properties.getProperty("OPENAI_API_KEY") ?: "YOUR_API_KEY_HERE"
+// ---------------------------------------------------------------
 
 android {
     namespace = "com.example.uniforbiblioteca"
@@ -17,14 +28,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        
-        // Lê a chave da OpenAI do local.properties
-        val properties = java.util.Properties()
-        val localPropertiesFile = rootProject.file("local.properties")
-        if (localPropertiesFile.exists()) {
-            properties.load(localPropertiesFile.inputStream())
-        }
-        val openaiKey = properties.getProperty("OPENAI_API_KEY") ?: "YOUR_API_KEY_HERE"
+
+        // Agora podemos usar a chave aqui
         buildConfigField("String", "OPENAI_API_KEY", "\"$openaiKey\"")
     }
 
@@ -77,20 +82,18 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
 
-
     // ---- Kotlinx Serialization ----
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
 
-    // ---- Coroutines (para chamadas assíncronas Retrofit) ----
+    // ---- Coroutines ----
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
 
     // ViewModel + LiveData
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
-    // Fragment KTX (para usar by viewModels)
+
+    // Fragment KTX
     implementation("androidx.fragment:fragment-ktx:1.8.3")
-    // Coroutines (caso não tenha)
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 }

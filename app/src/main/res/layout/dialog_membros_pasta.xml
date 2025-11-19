@@ -15,6 +15,8 @@
         android:text="Email ou Matricula" />
 
     <EditText
+        android:background="@drawable/input"
+
         android:id="@+id/input_novo_membro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,11 +30,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/add_membro_button"
-            style="@style/botao"
+            style="@style/botao_primary"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
@@ -42,7 +45,7 @@
         <Button
             android:id="@+id/cancelar_membro_button"
 
-            style="@style/botao_neg"
+            style="@style/botao_negativo"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -126,12 +126,11 @@
 
             <Button
                 android:id="@+id/addaCesta"
-                style="@style/botao"
+                style="@style/botao_primary"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="5dp"
-                android:backgroundTint="@color/button"
                 android:text="Adicionar à cesta" />
 
             <Button
@@ -139,7 +138,7 @@
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                style="@style/botao"
+                style="@style/botao_primary"
                 android:text="Adicionar a uma pasta" />
 
         </LinearLayout>

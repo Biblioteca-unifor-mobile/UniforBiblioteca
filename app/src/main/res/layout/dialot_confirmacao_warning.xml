@@ -28,7 +28,7 @@
 
         <Button
             android:id="@+id/warn_reservar_btn"
-            style="@style/botao"
+            style="@style/botao_primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -36,7 +36,7 @@
 
         <Button
             android:id="@+id/warn_confirmar_btn"
-            style="@style/botao"
+            style="@style/botao_primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -44,7 +44,7 @@
 
         <Button
             android:id="@+id/warn_cancelar_btn"
-            style="@style/botao_neg"
+            style="@style/botao_negativo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

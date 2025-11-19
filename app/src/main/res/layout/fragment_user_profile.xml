@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".UserProfileFragment">
+    tools:context=".fragment.UserProfileFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
 
         <Button
             android:id="@+id/user_profile_cesta_button"
-            style="@style/botao"
+            style="@style/botao_primary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -109,7 +109,7 @@
 
         <Button
             android:id="@+id/user_profile_delete_button"
-            style="@style/botao_neg"
+            style="@style/botao_negativo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
