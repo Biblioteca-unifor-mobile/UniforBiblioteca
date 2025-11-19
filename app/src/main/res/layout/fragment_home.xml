@@ -149,6 +149,17 @@
         android:layout_marginBottom="10dp"
         android:text="Livros Emprestados" />
 
+    <!-- Novo TextView para a mensagem de vazio -->
+    <TextView
+        android:id="@+id/txt_nenhum_livro_emprestado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Nenhum livro emprestado."
+        android:visibility="gone"
+        style="@style/NormalText" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewHome"
         style="@style/TitleText"
