@@ -17,6 +17,15 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Lê a chave da OpenAI do local.properties
+        val properties = java.util.Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            properties.load(localPropertiesFile.inputStream())
+        }
+        val openaiKey = properties.getProperty("OPENAI_API_KEY") ?: "YOUR_API_KEY_HERE"
+        buildConfigField("String", "OPENAI_API_KEY", "\"$openaiKey\"")
     }
 
     buildTypes {
@@ -39,6 +48,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
