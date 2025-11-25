@@ -11,7 +11,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.example.uniforbiblioteca.R
 
-class DialogCriarPasta: DialogFragment() {
+class DialogCriarPasta (
+    private val onCreateFolder: (String) -> Unit
+): DialogFragment() {
 
     private lateinit var nomePastaTextView: TextView
     private lateinit var nomePastaEditText: EditText
@@ -31,7 +33,12 @@ class DialogCriarPasta: DialogFragment() {
 
         // Listeners vazios
         confirmarButton.setOnClickListener {
-            dismiss()
+            val novoNome = nomePastaEditText.text.toString().trim()
+
+            if (novoNome.isNotEmpty()) {
+                onCreateFolder(novoNome)
+                dismiss()
+            }
         }
 
         cancelarButton.setOnClickListener {

@@ -108,7 +108,7 @@ class HomeFragment : Fragment() {
                          val book = loan.bookCopy?.book
                          val dataLimite = formatarData(loan.dataLimite)
                          LivroCardData(
-                            id = 0, // ID fake pois LivroCardData usa Int
+                            id = "0", // ID fake pois LivroCardData usa Int
                             titulo = book?.titulo ?: "Sem Título",
                             autor = book?.autor ?: "Sem Autor",
                             tempo = "Finaliza: $dataLimite",

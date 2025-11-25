@@ -7,19 +7,20 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uniforbiblioteca.dataclass.PastaCardData
 import com.example.uniforbiblioteca.R
+import com.example.uniforbiblioteca.dataclass.Folder
 
 class PastaAdapter(
-    private val pastas: List<PastaCardData>,
-    private val onItemClick: (PastaCardData) -> Unit
+    private var pastas: MutableList<Folder>,
+    private val onItemClick: (Folder) -> Unit
 ) : RecyclerView.Adapter<PastaAdapter.PastaViewHolder>() {
 
     inner class PastaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleView: TextView = itemView.findViewById(R.id.titulo_card_pasta)
         private val tempoView: TextView = itemView.findViewById(R.id.card_ultima_modificacao)
 
-        fun bind(pasta: PastaCardData) {
-            titleView.text = pasta.titulo
-            tempoView.text = pasta.lastModified;
+        fun bind(pasta: Folder) {
+            titleView.text = pasta.nome
+            tempoView.text = pasta.updatedAt;
 
 
             itemView.setOnClickListener { onItemClick(pasta) }
@@ -37,4 +38,12 @@ class PastaAdapter(
     }
 
     override fun getItemCount() = pastas.size
+
+    fun updateItems(items: List<Folder>) {
+        pastas.clear()
+        pastas.addAll(items)
+        notifyDataSetChanged()
+    }
+
 }
+

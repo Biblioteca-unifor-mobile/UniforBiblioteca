@@ -74,6 +74,15 @@ d        <item name="android:layout_width">wrap_content</item>
         <item name="iconTint">@color/botao_borda</item>
     </style>
 
+
+    <style name="lixo">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">#00FFFFFF</item>
+        <item name="icon">@drawable/lixo</item>
+        <item name="iconTint">@color/botao_borda</item>
+    </style>
+
     <style name="trash">
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>

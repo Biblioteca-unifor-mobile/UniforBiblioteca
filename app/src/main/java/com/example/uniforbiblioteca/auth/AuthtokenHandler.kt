@@ -48,6 +48,16 @@ class AuthTokenHandler(private val context: Context?) {
         }
     }
 
+    fun getMatricula(): String? {
+        val token = getToken() ?: return null
+        return try {
+            val payload = decodeJwtPayload(token)
+            payload.optString("matricula", "")
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     private fun decodeJwtPayload(jwt: String): JSONObject {
         val parts = jwt.split(".")
         if (parts.size != 3) throw IllegalArgumentException("JWT inválido")

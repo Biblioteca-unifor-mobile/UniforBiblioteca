@@ -19,6 +19,7 @@ data class LivroData(
     @SerialName("_imageUrl") var imageUrl: String? = null,
     @SerialName("_tipo") var tipo: String? = null,
     @SerialName("_numeroExemplares") var numeroExemplares: Int? = null,
-    @SerialName("_copies") var copies: List<ExemplarData>? = null
+    @SerialName("_copies") var copies: List<ExemplarData>? = null,
+    @SerialName("updatedAt") var updatedAt: String? = null
 ) : Serializable
 

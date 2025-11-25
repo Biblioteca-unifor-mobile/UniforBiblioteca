@@ -50,9 +50,9 @@ class DialogWarningConfirmar : DialogFragment() {
 
 
         val livros = listOf(
-            LivroCardData(1, "Livro 1", "Autor 1", "5 dias atrás", "https://placehold.co/200x300/png","Indisponivel"),
-            LivroCardData(2, "Livro 2", "Autor 2", "8 dias atrás", "https://placehold.co/200x300/png",),
-            LivroCardData(3, "Livro 3", "Autor 3", "8 dias atrás", "https://placehold.co/200x300/png", "Indisponivel"),
+            LivroCardData("1", "Livro 1", "Autor 1", "5 dias atrás", "https://placehold.co/200x300/png","Indisponivel"),
+            LivroCardData("2", "Livro 2", "Autor 2", "8 dias atrás", "https://placehold.co/200x300/png",),
+            LivroCardData("3", "Livro 3", "Autor 3", "8 dias atrás", "https://placehold.co/200x300/png", "Indisponivel"),
         )
 
         val adapter = LivrosConfirmacaoAdapter(livros)
