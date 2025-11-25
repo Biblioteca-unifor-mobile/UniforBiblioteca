@@ -45,6 +45,8 @@
             android:text="Tipo" />
 
         <EditText
+            android:background="@drawable/input"
+            android:layout_marginBottom="10dp"
             android:id="@+id/admin_edit_livro_tipo"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
@@ -62,6 +64,8 @@
             android:text="Titulo" />
 
         <EditText
+            android:background="@drawable/input"
+            android:layout_marginBottom="10dp"
             android:id="@+id/admin_edit_livro_titulo_antigo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,6 +83,8 @@
             android:text="Autor" />
 
         <EditText
+            android:background="@drawable/input"
+            android:layout_marginBottom="10dp"
             android:id="@+id/admin_edit_livro_autor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -96,6 +102,8 @@
             android:text="Co-Autor" />
 
         <EditText
+            android:background="@drawable/input"
+            android:layout_marginBottom="10dp"
             android:id="@+id/admin_edit_livro_coautor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -141,12 +149,15 @@
                     android:text="Edicao" />
 
                 <EditText
+                    android:background="@drawable/input"
+                    android:layout_marginBottom="10dp"
                     android:id="@+id/admin_edit_livro_edicao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ems="10"
                     android:inputType="text"
+                    android:layout_marginEnd="10dp"
                     android:paddingTop="10dp" />
 
             </LinearLayout>
@@ -168,6 +179,8 @@
                     android:text="Ano de Edição" />
 
                 <EditText
+                    android:background="@drawable/input"
+                    android:layout_marginBottom="10dp"
                     android:id="@+id/admin_edit_livro_ano_edicao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -187,6 +200,8 @@
             android:text="Idioma" />
 
         <EditText
+            android:background="@drawable/input"
+            android:layout_marginBottom="10dp"
             android:id="@+id/admin_edit_livro_idioma"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -204,6 +219,8 @@
             android:text="Publicacao" />
 
         <EditText
+            android:background="@drawable/input"
+            android:layout_marginBottom="10dp"
             android:id="@+id/admin_edit_livro_publicacao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -221,6 +238,8 @@
             android:text="Resumo" />
 
         <EditText
+            android:background="@drawable/input"
+            android:layout_marginBottom="10dp"
             android:id="@+id/admin_edit_livro_resumo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -259,6 +278,8 @@
         </LinearLayout>
 
         <EditText
+            android:background="@drawable/input"
+            android:layout_marginBottom="10dp"
             android:id="@+id/admin_edit_livro_ISBN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -276,6 +297,8 @@
             android:text="Exemplares" />
 
         <EditText
+            android:background="@drawable/input"
+            android:layout_marginBottom="10dp"
             android:id="@+id/admin_edit_livro_exemplares"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -286,7 +309,7 @@
 
         <Button
             android:id="@+id/admin_edit_livro_confirmar"
-            style="@style/botao"
+            style="@style/botao_primary"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -297,7 +320,7 @@
 
         <Button
             android:id="@+id/admin_edit_livro_cancelar"
-            style="@style/botao"
+            style="@style/botao_negativo"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

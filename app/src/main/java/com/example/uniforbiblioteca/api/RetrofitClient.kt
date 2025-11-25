@@ -12,7 +12,7 @@ object RetrofitClient {
 
 //    private const val BASE_URL = "https://biblioteca-unifor-backend.onrender.com/"
     // Para o emulador Android, o localhost da máquina host é acessível via 10.0.2.2
-    private const val BASE_URL = "http://10.0.2.2:3000/"
+    private const val BASE_URL = "https://biblioteca-unifor-backend.onrender.com/"
 
     fun create(context: Context?): Retrofit {
         val logging = HttpLoggingInterceptor().apply {

@@ -7,11 +7,15 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.example.uniforbiblioteca.R
+import com.example.uniforbiblioteca.viewmodel.FolderManager
 
-class DialogEditarPasta: DialogFragment() {
+class DialogEditarPasta(
+    private val onNomeEditado: (String) -> Unit
+): DialogFragment() {
 
     private lateinit var nomePastaTextView: TextView
     private lateinit var nomePastaEditText: EditText
@@ -31,8 +35,14 @@ class DialogEditarPasta: DialogFragment() {
 
         // Listeners vazios
         confirmarButton.setOnClickListener {
-            dismiss()
+            val novoNome = nomePastaEditText.text.toString().trim()
+
+            if (novoNome.isNotEmpty()) {
+                onNomeEditado(novoNome)
+                dismiss()
+            }
         }
+
 
         cancelarButton.setOnClickListener {
             dismiss()
@@ -41,4 +51,5 @@ class DialogEditarPasta: DialogFragment() {
         builder.setView(view)
         return builder.create()
     }
+
 }

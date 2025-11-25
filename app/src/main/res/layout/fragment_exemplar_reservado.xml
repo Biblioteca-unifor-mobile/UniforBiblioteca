@@ -90,7 +90,7 @@
 
             <Button
                 android:id="@+id/exemplar_reservado_ver_btn"
-                style="@style/botao"
+                style="@style/botao_primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -98,7 +98,7 @@
 
             <Button
                 android:id="@+id/exemplar_reservado_editar_btn"
-                style="@style/botao"
+                style="@style/botao_primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -106,7 +106,7 @@
 
             <Button
                 android:id="@+id/exemplar_reservado_cancelar_btn"
-                style="@style/botao"
+                style="@style/botao_negativo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -114,7 +114,7 @@
 
             <Button
                 android:id="@+id/exemplar_reservado_indisponivel_btn"
-                style="@style/botao"
+                style="@style/botao_primary"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:background="@color/background"
-    android:backgroundTint="@color/background">
+    android:background="@drawable/fundo_card"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="104dp"
-        android:backgroundTint="@color/background">
+        android:layout_height="104dp">
 
 
         <TextView

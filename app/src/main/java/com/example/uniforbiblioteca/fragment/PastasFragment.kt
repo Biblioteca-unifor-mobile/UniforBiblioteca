@@ -1,17 +1,22 @@
 package com.example.uniforbiblioteca.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.activity.MainActivity
-import com.example.uniforbiblioteca.dataclass.PastaCardData
+import com.example.uniforbiblioteca.dataclass.Folder
 import com.example.uniforbiblioteca.dialog.DialogCriarPasta
 import com.example.uniforbiblioteca.rvadapter.PastaAdapter
+import com.example.uniforbiblioteca.viewmodel.FolderManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.launch
 
 class PastasFragment : androidx.fragment.app.Fragment() {
 
@@ -24,64 +29,66 @@ class PastasFragment : androidx.fragment.app.Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(_root_ide_package_.com.example.uniforbiblioteca.R.layout.fragment_pastas, container, false)
+
+        val view = inflater.inflate(R.layout.fragment_pastas, container, false)
 
         //
-        val recyclerView: RecyclerView = view.findViewById(_root_ide_package_.com.example.uniforbiblioteca.R.id.pastasRecyclerView) // Ajuste o id para o seu XML
+        val recyclerView: RecyclerView = view.findViewById(R.id.pastasRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Pastas de placeholders
-        val pastas = listOf(
-            PastaCardData(
-                1,
-                "Estrutura de Dados",
-                "Ultima Modificação: 2025-10-08",
-                "https://placehold.co/200x300/png"
-            ),
-            PastaCardData(
-                2,
-                "Java",
-                "Ultima Modificação: 2025-10-07",
-                "https://placehold.co/200x300/png"
-            ),
-            PastaCardData(
-                3,
-                "Redes",
-                "Ultima Modificação: 2025-10-06",
-                "https://placehold.co/200x300/png"
-            ),
-            PastaCardData(
-                4,
-                "Integração",
-                "Ultima Modificação: 2025-10-05",
-                "https://placehold.co/200x300/png"
-            ),
-        )
+
         // Adapter
-        val adapter =
-            PastaAdapter(pastas) { pasta ->
-                parentFragmentManager.beginTransaction()
-                    .replace(
-                        R.id.mainFragmentContainer,
-                        PastaFragment::class.java,
-                        null
-                    )
-                    .addToBackStack(null)
-                    .commit()
-            }
+        val adapter = PastaAdapter(FolderManager.folderList) { pasta ->
+            parentFragmentManager.beginTransaction()
+                .replace(
+                    R.id.mainFragmentContainer,
+                    PastaFragment.newInstance(pasta)
+                )
+                .addToBackStack(null)
+                .commit()
+        }
+
 
         recyclerView.adapter = adapter
 
-        addFAB = view.findViewById(_root_ide_package_.com.example.uniforbiblioteca.R.id.novaPasta)
+        addFAB = view.findViewById(R.id.novaPasta)
 
         addFAB.setOnClickListener {
-            val dialog = DialogCriarPasta()
+            val dialog = DialogCriarPasta { novoNome ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    try {
+                        createFolder(novoNome)
+                        // Atualiza lista
+                        adapter.updateItems(FolderManager.folderList)
+                    } catch (e: Exception) {
+                        Toast.makeText(requireContext(),
+                            "Não foi possível criar a pasta.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
             dialog.show(parentFragmentManager, "CriarPasta")
+        }
+
+
+        lifecycleScope.launch {
+            try {
+                FolderManager.updateFolderList()
+            } catch (e: Exception){
+                Toast.makeText(requireContext(), "Ocorreu um erro ao buscar as pastas.", Toast.LENGTH_SHORT).show()
+            }
+            adapter.updateItems(FolderManager.folderList)
         }
 
         return view
     }
 
+
+    suspend fun createFolder(novo: String) {
+        val folder = Folder(nome = novo)
+        FolderManager.createFolder(folder)
+    }
 
 
     override fun onResume() {

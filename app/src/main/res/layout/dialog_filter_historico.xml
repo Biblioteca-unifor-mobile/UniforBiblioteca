@@ -62,6 +62,8 @@
             android:text="Inicio:" />
 
         <EditText
+            android:background="@drawable/input"
+
             android:id="@+id/startDateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,6 +86,8 @@
             android:text="Fim:" />
 
         <EditText
+            android:background="@drawable/input"
+
             android:id="@+id/endDateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -97,7 +101,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:text="Pesquisar"
-        style="@style/botao" />
+        style="@style/botao_primary" />
 
 </LinearLayout>
