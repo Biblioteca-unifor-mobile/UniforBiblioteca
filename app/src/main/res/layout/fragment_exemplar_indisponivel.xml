@@ -67,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                style="@style/botao"
+                style="@style/botao_primary"
                 android:text="Ver Livro"/>
 
             <Button
@@ -75,13 +75,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                style="@style/botao"
+                style="@style/botao_primary"
                 android:text="Editar"/>
 
 
             <Button
                 android:id="@+id/exemplar_indisponivel_inindisponivel_btn"
-                style="@style/botao"
+                style="@style/botao_primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"

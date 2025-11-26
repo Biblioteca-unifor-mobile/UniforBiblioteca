@@ -112,7 +112,7 @@
 
             <Button
                 android:id="@+id/admin_livro_editar"
-                style="@style/botao"
+                style="@style/botao_primary"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -125,7 +125,7 @@
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                style="@style/botao"
+                style="@style/botao_primary"
                 android:layout_marginTop="10dp"
                 android:text="Ver Exemplares"/>
 

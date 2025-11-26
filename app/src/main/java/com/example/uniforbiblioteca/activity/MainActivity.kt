@@ -14,6 +14,7 @@ import com.example.uniforbiblioteca.fragment.PastasFragment
 import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.fragment.HistoricoFragment
 import com.example.uniforbiblioteca.fragment.HomeFragment
+import com.example.uniforbiblioteca.viewmodel.FolderManager
 import com.google.android.material.button.MaterialButton
 
 class MainActivity : AppCompatActivity() {

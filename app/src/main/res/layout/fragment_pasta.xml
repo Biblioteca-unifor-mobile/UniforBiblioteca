@@ -86,6 +86,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/pasta_deletar_btn"
+                style="@style/lixo"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

@@ -11,7 +11,7 @@ import com.example.uniforbiblioteca.dataclass.ChatMassage
 import com.example.uniforbiblioteca.R
 
 class ChatAdapter(
-    private val messages: List<ChatMassage>
+    private val messages: MutableList<ChatMassage>
 ) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

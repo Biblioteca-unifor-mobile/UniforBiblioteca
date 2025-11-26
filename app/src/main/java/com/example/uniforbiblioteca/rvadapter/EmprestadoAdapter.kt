@@ -11,7 +11,7 @@ import com.example.uniforbiblioteca.dataclass.LivroCardData
 import com.example.uniforbiblioteca.R
 
 class EmprestadoAdapter(
-    private val books: List<LivroCardData>,
+    private var books: List<LivroCardData>,
     private val onItemClick: (LivroCardData) -> Unit
 ) : RecyclerView.Adapter<EmprestadoAdapter.EmprestadoViewHolder>() {
 
@@ -43,4 +43,9 @@ class EmprestadoAdapter(
     }
 
     override fun getItemCount() = books.size
+
+    fun updateData(newBooks: List<LivroCardData>) {
+        books = newBooks
+        notifyDataSetChanged()
+    }
 }

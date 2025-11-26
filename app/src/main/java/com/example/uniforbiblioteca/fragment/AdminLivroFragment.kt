@@ -8,15 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.activity.AdminActivity
+import com.example.uniforbiblioteca.api.LivroAPI
+import com.example.uniforbiblioteca.api.RetrofitClient
 import com.example.uniforbiblioteca.dataclass.LivroData
+import kotlinx.coroutines.launch
 
 class AdminLivroFragment : Fragment() {
 
     lateinit var editar: Button
     lateinit var exemplares: Button
     private var livro: LivroData? = null
+
+    private val livroAPI by lazy {
+        RetrofitClient.create(context).create(LivroAPI::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,15 +40,20 @@ class AdminLivroFragment : Fragment() {
         editar = view.findViewById(R.id.admin_livro_editar)
         exemplares = view.findViewById(R.id.admin_livro_ver_exemplares)
 
+        // Se tiver o livro passado, exibe inicialmente
         livro?.let {
             atualizarCampos(view, it)
+            // Se tiver ID, busca detalhes atualizados (como lista de cópias)
+            it.id?.let { id -> buscarDetalhesLivro(id, view) }
         } ?: run {
             Log.d("ADMIN_LIVRO", "⚠️ Nenhum livro recebido!")
         }
 
         exemplares.setOnClickListener {
+            // Passa o livro (com ID) para o fragmento de exemplares
+            val fragment = AdminExemplaresFragment.newInstance(livro)
             parentFragmentManager.beginTransaction()
-                .replace(R.id.adminFragmentContainer, AdminExemplaresFragment::class.java, null)
+                .replace(R.id.adminFragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit()
         }
@@ -54,6 +67,18 @@ class AdminLivroFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun buscarDetalhesLivro(id: String, view: View) {
+        lifecycleScope.launch {
+            try {
+                val livroAtualizado = livroAPI.getBook(id)
+                livro = livroAtualizado // Atualiza o objeto local
+                atualizarCampos(view, livroAtualizado)
+            } catch (e: Exception) {
+                Log.e("ADMIN_LIVRO", "Erro ao buscar detalhes do livro: ${e.message}")
+            }
+        }
     }
 
     private fun atualizarCampos(view: View, livro: LivroData) {
@@ -88,7 +113,11 @@ class AdminLivroFragment : Fragment() {
         resumoView.text = livro.resumo ?: "—"
         publicacaoView.text = livro.publicacao ?: "—"
 
-        quantidadeView.text = "Quantidade no acervo: ${livro.copies?.size ?: 0}"
+        // O payload de getBook retorna "copies" que é uma lista.
+        // O payload de createBook tem "numeroExemplares" e "copies".
+        // Se tiver a lista de copies, usamos o tamanho dela.
+        val qtd = livro.copies?.size ?: livro.numeroExemplares ?: 0
+        quantidadeView.text = "Quantidade no acervo: $qtd"
     }
 
     override fun onResume() {

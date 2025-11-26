@@ -50,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/shape_com_borda"
+        android:backgroundTint="@color/grey"
         android:orientation="vertical">
 
         <LinearLayout
@@ -109,7 +110,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        style="@style/botao_neg"
+        style="@style/botao_negativo"
         android:text="Sair" />
 
     <Space

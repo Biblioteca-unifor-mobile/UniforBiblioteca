@@ -8,10 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.activity.MainActivity
+import com.example.uniforbiblioteca.api.CartAPI
+import com.example.uniforbiblioteca.api.LivroAPI
+import com.example.uniforbiblioteca.api.RetrofitClient
+import com.example.uniforbiblioteca.dataclass.CartCheckoutRequest
 import com.example.uniforbiblioteca.dataclass.LivroData
 import com.example.uniforbiblioteca.dialog.SelecionarPastaDialog
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 class LivroFragment : Fragment() {
 
@@ -20,6 +31,15 @@ class LivroFragment : Fragment() {
     private lateinit var voltar: Button
 
     private var livro: LivroData? = null
+    private var quantidadeDisponivel = 0
+
+    private val livroAPI by lazy {
+        RetrofitClient.create(context).create(LivroAPI::class.java)
+    }
+
+    private val cartAPI by lazy {
+        RetrofitClient.create(context).create(CartAPI::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,12 +58,13 @@ class LivroFragment : Fragment() {
 
         livro?.let {
             atualizarCampos(view, it)
+            it.id?.let { id -> buscarDetalhesLivro(id, view) }
         } ?: run {
             Log.d("LIVRO_FRAGMENT", "⚠️ Nenhum livro recebido!")
         }
 
         addACesta.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            adicionarAoCarrinhoOuReservar()
         }
 
         addAPasta.setOnClickListener {
@@ -56,6 +77,18 @@ class LivroFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun buscarDetalhesLivro(id: String, view: View) {
+        lifecycleScope.launch {
+            try {
+                val livroAtualizado = livroAPI.getBook(id)
+                livro = livroAtualizado
+                atualizarCampos(view, livroAtualizado)
+            } catch (e: Exception) {
+                Log.e("LIVRO_FRAGMENT", "Erro ao buscar detalhes do livro: ${e.message}")
+            }
+        }
     }
 
     private fun atualizarCampos(view: View, livro: LivroData) {
@@ -91,15 +124,65 @@ class LivroFragment : Fragment() {
         edicaoView.text = "${livro.edicao ?: "—"} / ${livro.anoEdicao ?: "—"}"
 
         val quantidadeTotal = (livro.copies ?: emptyList()).size
-        var quantidadeDisponivel = 0
+        quantidadeDisponivel = 0
         for (exemplar in livro.copies ?: emptyList()){
-            if (exemplar.status == "DISPONIVEL"){
+            if (exemplar.status == "DISPONIVEL" || exemplar.status == "Disponível"){
                 quantidadeDisponivel += 1
             }
         }
+        
+        val finalTotal = if (quantidadeTotal == 0 && livro.numeroExemplares != null) livro.numeroExemplares else quantidadeTotal
 
-        quantiadeView.text = "Quantidade Disponível: ${quantidadeDisponivel} / ${quantidadeTotal}"
+        quantiadeView.text = "Quantidade Disponível: ${quantidadeDisponivel} / ${finalTotal}"
 
+        if (quantidadeDisponivel > 0) {
+            addACesta.text = "Adicionar à Cesta"
+        } else {
+            addACesta.text = "Reservar"
+        }
+    }
+
+    private fun adicionarAoCarrinhoOuReservar() {
+        val currentLivro = livro ?: return
+
+        lifecycleScope.launch {
+            try {
+                if (quantidadeDisponivel > 0) {
+                    // Pegar primeiro exemplar disponível
+                    val exemplarDisponivel = currentLivro.copies?.firstOrNull { 
+                        it.status == "DISPONIVEL" || it.status == "Disponível" 
+                    }
+                    
+                    if (exemplarDisponivel?.id != null) {
+                        cartAPI.addToCart(exemplarDisponivel.id)
+                        Toast.makeText(context, "Adicionado à cesta!", Toast.LENGTH_SHORT).show()
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                    } else {
+                        Toast.makeText(context, "Erro: ID do exemplar não encontrado", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    // Reservar
+                    val bookId = currentLivro.id
+                    if (bookId != null) {
+                        // Data limite padrão (ex: 15 dias)
+                        val calendar = Calendar.getInstance()
+                        calendar.add(Calendar.DAY_OF_YEAR, 15)
+                        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+                        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+                        val dataLimite = dateFormat.format(calendar.time)
+
+                        cartAPI.reserveBook(bookId, CartCheckoutRequest(dataLimite))
+                        Toast.makeText(context, "Reserva realizada com sucesso!", Toast.LENGTH_SHORT).show()
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                    } else {
+                         Toast.makeText(context, "Erro: ID do livro não encontrado", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("LIVRO_FRAGMENT", "Erro ao adicionar/reservar: ${e.message}")
+                Toast.makeText(context, "Erro na operação: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     override fun onResume() {

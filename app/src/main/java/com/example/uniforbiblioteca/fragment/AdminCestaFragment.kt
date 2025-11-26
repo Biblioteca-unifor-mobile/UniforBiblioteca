@@ -10,7 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uniforbiblioteca.rvadapter.CestaAdapter
-import com.example.uniforbiblioteca.dataclass.LivroCardData
+import com.example.uniforbiblioteca.dataclass.CartItem
+import com.example.uniforbiblioteca.dataclass.LivroData
 import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.activity.AdminActivity
 import com.example.uniforbiblioteca.ui.DialogWarningConfirmar
@@ -38,51 +39,27 @@ class AdminCestaFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
 
-        // Lista de placeholders
+        // Lista de placeholders convertida para CartItem
         val livros = listOf(
-            LivroCardData(
-                1,
-                "Livro 1",
-                "Autor 1",
-                "5 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                2,
-                "Livro 2",
-                "Autor 2",
-                "8 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                3,
-                "Livro 3",
-                "Autor 3",
-                "8 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                4,
-                "Livro 4",
-                "Autor 4",
-                "30 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                5,
-                "Livro 5",
-                "Autor 5",
-                "50 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
+            CartItem(book = LivroData(titulo = "Livro 1", autor = "Autor 1", imageUrl = "https://placehold.co/200x300/png")),
+            CartItem(book = LivroData(titulo = "Livro 2", autor = "Autor 2", imageUrl = "https://placehold.co/200x300/png")),
+            CartItem(book = LivroData(titulo = "Livro 3", autor = "Autor 3", imageUrl = "https://placehold.co/200x300/png")),
+            CartItem(book = LivroData(titulo = "Livro 4", autor = "Autor 4", imageUrl = "https://placehold.co/200x300/png")),
+            CartItem(book = LivroData(titulo = "Livro 5", autor = "Autor 5", imageUrl = "https://placehold.co/200x300/png"))
         )
 
         // Adapter
-        val adapter = CestaAdapter(livros) { livro ->
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.adminFragmentContainer, LivroFragment::class.java, null)
-                .addToBackStack(null)
-                .commit()
+        val adapter = CestaAdapter(livros) { item ->
+            // Aqui estamos tratando o clique (que no novo CestaAdapter é long click para delete)
+            // Adaptando para navegação caso desejado, ou mantendo mock.
+            val livro = item.book
+            if (livro != null) {
+                val fragment = LivroFragment.newInstance(livro)
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.adminFragmentContainer, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
 
         recyclerView.adapter = adapter

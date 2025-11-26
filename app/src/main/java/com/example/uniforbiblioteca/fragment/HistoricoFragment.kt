@@ -14,8 +14,6 @@ import com.example.uniforbiblioteca.dataclass.LivroCardData
 import com.example.uniforbiblioteca.dialog.HistoricoFilterDialogFragment
 import com.example.uniforbiblioteca.rvadapter.HistoricoAdapter
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -51,63 +49,63 @@ class HistoricoFragment : Fragment() {
         // Lista de placeholders
         val livros = listOf(
             LivroCardData(
-                1,
+                "1",
                 "Livro 1",
                 "Autor 1",
                 "5 dias atrás",
                 "https://placehold.co/200x300/png"
             ),
             LivroCardData(
-                2,
+                "2",
                 "Livro 2",
                 "Autor 2",
                 "8 dias atrás",
                 "https://placehold.co/200x300/png"
             ),
             LivroCardData(
-                3,
+                "3",
                 "Livro 3",
                 "Autor 3",
                 "8 dias atrás",
                 "https://placehold.co/200x300/png"
             ),
             LivroCardData(
-                4,
+                "4",
                 "Livro 4",
                 "Autor 4",
                 "30 dias atrás",
                 "https://placehold.co/200x300/png"
             ),
             LivroCardData(
-                5,
+                "5",
                 "Livro 5",
                 "Autor 5",
                 "50 dias atrás",
                 "https://placehold.co/200x300/png"
             ),
             LivroCardData(
-                6,
+                "6",
                 "Livro 6",
                 "Autor 6",
                 "50 dias atrás",
                 "https://placehold.co/200x300/png"
             ),
             LivroCardData(
-                7,
+                "7",
                 "Livro 7",
                 "Autor 7",
                 "70 dias atrás",
                 "https://placehold.co/200x300/png"
             ),
             LivroCardData(
-                8,
+                "8",
                 "Livro 8",
                 "Autor 8",
                 "90 dias atrás",
                 "https://placehold.co/200x300/png"
             ),
             LivroCardData(
-                9,
+                "9",
                 "Livro 9",
                 "Autor 9",
                 "90 dias atrás",

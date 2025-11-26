@@ -1,8 +1,18 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
     id("kotlinx-serialization")
+}
+
+// Lê do local.properties (não commitado)
+val localProps = Properties()
+val localPropsFile = rootProject.file("local.properties")
+if (localPropsFile.exists()) {
+    FileInputStream(localPropsFile).use { localProps.load(it) }
 }
 
 android {
@@ -17,6 +27,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Lê chave da OpenAI: 1º local.properties, 2º gradle.properties, 3º placeholder
+        val openaiKey = localProps.getProperty("OPENAI_API_KEY")
+            ?: project.findProperty("OPENAI_API_KEY") as String?
+            ?: "YOUR_API_KEY_HERE"
+        buildConfigField("String", "OPENAI_API_KEY", "\"$openaiKey\"")
     }
 
     buildTypes {
@@ -39,6 +55,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 

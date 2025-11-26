@@ -11,7 +11,7 @@ import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.dataclass.Exemplar
 
 class ExemplarAdapter(
-    private val exemplares: List<Exemplar>,
+    private var exemplares: List<Exemplar>,
     private val onItemClick: (Exemplar) -> Unit
 ) : RecyclerView.Adapter<ExemplarAdapter.ExemplarViewHolder>() {
 
@@ -45,4 +45,8 @@ class ExemplarAdapter(
         holder.bind(exemplares[position])
     }
 
+    fun updateData(newExemplares: List<Exemplar>) {
+        exemplares = newExemplares
+        notifyDataSetChanged()
+    }
 }

@@ -27,6 +27,8 @@
         android:orientation="vertical">
 
         <EditText
+            android:background="@drawable/input"
+            android:layout_marginBottom="10dp"
             android:id="@+id/pesquisarHistorico"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
