@@ -79,7 +79,7 @@ class LoginActivity : AppCompatActivity() {
                     val tokenHandler = AuthTokenHandler(this@LoginActivity)
                     tokenHandler.setToken(token)
 
-                    if (tokenHandler.getRole() == "ADMINISTRADOR") {
+                    if (tokenHandler.getRole() == "ADMINISTRADOR" || tokenHandler.getRole() == "SUPER") {
                         val intent = Intent(this@LoginActivity, AdminActivity::class.java)
                         startActivity(intent)
                     } else {

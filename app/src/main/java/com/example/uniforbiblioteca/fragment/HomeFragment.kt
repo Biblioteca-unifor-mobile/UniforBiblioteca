@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.uniforbiblioteca.activity.MainActivity
 import com.example.uniforbiblioteca.R
+import com.example.uniforbiblioteca.auth.AuthTokenHandler
 import com.example.uniforbiblioteca.api.CartAPI
 import com.example.uniforbiblioteca.api.LivroAPI
 import com.example.uniforbiblioteca.api.RetrofitClient
@@ -40,6 +41,7 @@ class HomeFragment : Fragment() {
     lateinit var recente4: ImageView
     lateinit var recente5: ImageView
 
+    private lateinit var tokenHandler: AuthTokenHandler
     lateinit var txtNenhumEmprestimo: TextView
 
     private val livroAPI by lazy {
@@ -67,8 +69,39 @@ class HomeFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val adapter = EmprestadoAdapter(emptyList()) { livroCard ->
-             // Pode implementar clique para detalhes do empréstimo se quiser
+        val livros = listOf(
+            LivroCardData(
+                1,
+                "Livro 1",
+                "Autor 1",
+                "Finaliza: 13 de outubro de 2025",
+                "https://placehold.co/200x300/png"
+            ),
+            LivroCardData(
+                2,
+                "Livro 2",
+                "Autor 2",
+                "Finaliza: 13 de outubro de 2025",
+                "https://placehold.co/200x300/png"
+            ),
+            LivroCardData(
+                3,
+                "Livro 3",
+                "Autor 3",
+                "Finaliza: 22 de outubro de 2025",
+                "https://placehold.co/200x300/png"
+            ),
+            LivroCardData(
+                4,
+                "Livro 4",
+                "Autor 4",
+                "Finaliza: 22 de outubro de 2025",
+                "https://placehold.co/200x300/png"
+            ),
+        )
+
+        val adapter = EmprestadoAdapter(livros) { livro ->
+            verLivro()
         }
         recyclerView.adapter = adapter
 
@@ -81,8 +114,13 @@ class HomeFragment : Fragment() {
         matricula = view.findViewById(R.id.home_matricula)
         nome = view.findViewById(R.id.home_nome)
 
-        matricula.text = "2412819"
-        nome.text = "Olá, João"
+        tokenHandler = AuthTokenHandler(requireContext())
+
+        val nomeUsuario = tokenHandler.getName()
+        val matriculaUsuario = tokenHandler.getMatricula()
+
+        nome.text = "Olá, ${nomeUsuario ?: "Usuário"}"
+        matricula.text = matriculaUsuario ?: "Matrícula não encontrada"
 
         carregarLivrosRecentes()
         carregarEmprestimos(adapter, recyclerView)

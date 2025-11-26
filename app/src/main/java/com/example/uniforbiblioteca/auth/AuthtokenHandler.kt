@@ -48,11 +48,21 @@ class AuthTokenHandler(private val context: Context?) {
         }
     }
 
+    fun getName(): String? {
+        val token = getToken() ?: return null
+        return try {
+            val payload = decodeJwtPayload(token)
+            payload.optString("nome", null)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     fun getMatricula(): String? {
         val token = getToken() ?: return null
         return try {
             val payload = decodeJwtPayload(token)
-            payload.optString("matricula", "")
+            payload.optString("matricula", null)
         } catch (e: Exception) {
             null
         }

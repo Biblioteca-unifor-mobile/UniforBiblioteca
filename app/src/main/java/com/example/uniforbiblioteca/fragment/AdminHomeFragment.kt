@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.TextView
 import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.activity.AdminActivity
+import com.example.uniforbiblioteca.auth.AuthTokenHandler
 
 class AdminHomeFragment : Fragment() {
     private var param1: String? = null
@@ -20,6 +21,7 @@ class AdminHomeFragment : Fragment() {
     lateinit var nomeLbl: TextView
     lateinit var cargoLbl: TextView
     lateinit var greetingLbl: TextView
+    private lateinit var tokenHandler: AuthTokenHandler
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,10 +38,14 @@ class AdminHomeFragment : Fragment() {
         nomeLbl = view.findViewById(R.id.user_nome)
         cargoLbl = view.findViewById(R.id.user_cargo)
         greetingLbl = view.findViewById(R.id.user_greeting)
+        tokenHandler = AuthTokenHandler(requireContext())
 
-        nomeLbl.text = "Narak"
-        cargoLbl.text = "Desenvolvedor"
-        greetingLbl.text = "Seja bem vindo(a), " + nomeLbl.text
+        val nomeUsuario = tokenHandler.getName()
+        val cargoUsuario = tokenHandler.getRole()
+
+        nomeLbl.text = nomeUsuario ?: "Usuário"
+        cargoLbl.text = cargoUsuario?.replaceFirstChar { it.uppercase() } ?: "Não especificado"
+        greetingLbl.text = "Seja bem vindo(a), $nomeUsuario"
 
         sairBtn.setOnClickListener {
             (activity as? AdminActivity)?.sair()
