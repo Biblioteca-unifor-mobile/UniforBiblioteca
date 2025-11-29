@@ -1,5 +1,6 @@
 package com.example.uniforbiblioteca.rvadapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,16 +8,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.uniforbiblioteca.dataclass.LivroCardData
 import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.dataclass.LivroData
 
-final class AcervoAdapter(
-    private var books: List<LivroData>,
+final class PastaLivroAdapter(
+    private var books: MutableList<LivroData>,
+    private val onItemLongPress: (LivroData) -> Unit,
     private val onItemClick: (LivroData) -> Unit
-) : RecyclerView.Adapter<AcervoAdapter.AcervoViewHolder>() {
+) : RecyclerView.Adapter<PastaLivroAdapter.PastaLivroViewHolder>() {
 
-    inner class AcervoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class PastaLivroViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleView: TextView = itemView.findViewById(R.id.titulo_card_acervo)
         private val autorView: TextView = itemView.findViewById(R.id.autor_card_acervo)
         private val coverView: ImageView = itemView.findViewById(R.id.imagem_card_acervo)
@@ -35,24 +36,35 @@ final class AcervoAdapter(
             itemView.setOnClickListener {
                 onItemClick(livro)
             }
+
+            itemView.setOnLongClickListener {
+                onItemLongPress(livro)
+                true
+            }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AcervoViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PastaLivroViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.card_livroacervo, parent, false)
-        return AcervoViewHolder(view)
+        return PastaLivroViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: AcervoViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PastaLivroViewHolder, position: Int) {
         holder.bind(books[position])
     }
 
     override fun getItemCount() = books.size
 
 
-    fun updateData(newList: List<LivroData>) {
-        books = newList
+
+    fun updateData(newList: MutableList<LivroData>?) {
+
+        books.clear()
+        books.addAll(newList.orEmpty())
+
+
         notifyDataSetChanged()
     }
+
 }

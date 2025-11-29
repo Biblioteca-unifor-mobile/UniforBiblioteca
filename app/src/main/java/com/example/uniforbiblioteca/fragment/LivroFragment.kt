@@ -16,8 +16,11 @@ import com.example.uniforbiblioteca.api.CartAPI
 import com.example.uniforbiblioteca.api.LivroAPI
 import com.example.uniforbiblioteca.api.RetrofitClient
 import com.example.uniforbiblioteca.dataclass.CartCheckoutRequest
+import com.example.uniforbiblioteca.dataclass.Folder
 import com.example.uniforbiblioteca.dataclass.LivroData
 import com.example.uniforbiblioteca.dialog.SelecionarPastaDialog
+import com.example.uniforbiblioteca.viewmodel.FolderManager
+import com.example.uniforbiblioteca.viewmodel.FontManager
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -68,8 +71,9 @@ class LivroFragment : Fragment() {
         }
 
         addAPasta.setOnClickListener {
-            val dialog = SelecionarPastaDialog(requireContext())
-            dialog.show()
+            lifecycleScope.launch {
+                openDialog()
+            }
         }
 
         voltar.setOnClickListener {
@@ -77,6 +81,15 @@ class LivroFragment : Fragment() {
         }
 
         return view
+    }
+
+
+    suspend fun openDialog(){
+        FolderManager.updateFolderList()
+        val dialog = SelecionarPastaDialog(requireContext()) { folder ->
+                FolderManager.addBookToFolder(folder, livro!!)
+        }
+        dialog.show()
     }
 
     private fun buscarDetalhesLivro(id: String, view: View) {

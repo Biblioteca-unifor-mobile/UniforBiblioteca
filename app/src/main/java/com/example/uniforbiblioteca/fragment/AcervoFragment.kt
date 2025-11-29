@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
@@ -28,7 +30,11 @@ class AcervoFragment : Fragment() {
     private lateinit var adapter: AcervoAdapter
     private lateinit var filtroBtn: Button
     private lateinit var cestaFAB: FloatingActionButton
+    private lateinit var pesquisa: EditText
     private lateinit var voltarBtn: Button
+
+    private var listaLivros: MutableList<LivroData> = mutableListOf()
+    private var display: MutableList<LivroData> = mutableListOf()
 
     // Retrofit e ViewModel
     private val livroAPI by lazy {
@@ -55,6 +61,7 @@ class AcervoFragment : Fragment() {
         filtroBtn = view.findViewById(R.id.acervoFilterBtn)
         cestaFAB = view.findViewById(R.id.cestaFAB)
         voltarBtn = view.findViewById(R.id.voltar_acervo)
+        pesquisa = view.findViewById(R.id.pesquisa)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         adapter = AcervoAdapter(emptyList()) { livro ->
@@ -80,6 +87,10 @@ class AcervoFragment : Fragment() {
 
         carregarLivros()
 
+        pesquisa.doAfterTextChanged { text ->
+            pesquisarLivro(text.toString())
+        }
+
         return view
     }
 
@@ -87,12 +98,25 @@ class AcervoFragment : Fragment() {
         viewModel.carregarLivros(
             onLoaded = { livros ->
                 Log.d("ACERVO_FRAGMENT", "Livros carregados: ${livros.size}")
-                adapter.updateData(livros)
+                display = livros as MutableList<LivroData>
+                listaLivros = display
+                adapter.updateData(display)
             },
             onError = { e ->
                 Log.e("ACERVO_FRAGMENT", "Erro ao carregar livros: ${e.message}")
             }
         )
+    }
+
+    private fun pesquisarLivro(partial: String){
+        display = mutableListOf()
+        for (livro in listaLivros){
+            val title: String = livro.titulo.toString()
+            if (title.lowercase().startsWith(partial.lowercase())){
+                display.add(livro)
+            }
+        }
+        adapter.updateData(display)
     }
 
     private fun onLivroClicked(livro: LivroData) {

@@ -5,6 +5,7 @@ import com.example.uniforbiblioteca.dataclass.CartCheckoutResponse
 import com.example.uniforbiblioteca.dataclass.CartItemResponse
 import com.example.uniforbiblioteca.dataclass.CartReservationResponse
 import com.example.uniforbiblioteca.dataclass.CartResponse
+import com.example.uniforbiblioteca.dataclass.LoanDetail
 import com.example.uniforbiblioteca.dataclass.LoanResponse
 import com.example.uniforbiblioteca.dataclass.ReservationResponse
 import retrofit2.http.Body
@@ -57,5 +58,5 @@ interface CartAPI {
     ): Any // Retorna o loan atualizado
 
     @GET("cart/loans")
-    suspend fun getMyLoans(): LoanResponse
+    suspend fun getMyLoans(): List<LoanDetail>
 }

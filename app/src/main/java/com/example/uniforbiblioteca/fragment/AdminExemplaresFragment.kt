@@ -106,7 +106,7 @@ class AdminExemplaresFragment : Fragment() {
             }
         }
     }
-    
+
     private fun navegarParaDetalhesExemplar(exemplar: Exemplar) {
         val fragment = when (exemplar.status) {
             "Disponível", "DISPONIVEL" -> ExemplarDisponivelFragment::class.java

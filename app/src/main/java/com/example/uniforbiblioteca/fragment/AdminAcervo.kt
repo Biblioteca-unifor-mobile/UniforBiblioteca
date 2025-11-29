@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
@@ -29,6 +31,9 @@ class AdminAcervo : Fragment() {
     private lateinit var adapter: AdminAcervoAdapter
     private lateinit var filtroBtn: Button
     private lateinit var newBtn: FloatingActionButton
+    private lateinit var pesquisa: EditText
+    private var listaLivros: MutableList<LivroData> = mutableListOf()
+    private var display: MutableList<LivroData> = mutableListOf()
 
     // Retrofit e ViewModel
     private val livroAPI by lazy {
@@ -53,6 +58,7 @@ class AdminAcervo : Fragment() {
         recyclerView = view.findViewById(R.id.admin_acervo_rv)
         filtroBtn = view.findViewById(R.id.admin_acervo_filtro_button)
         newBtn = view.findViewById(R.id.admin_acervo_fab)
+        pesquisa = view.findViewById(R.id.pesquisa)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         adapter = AdminAcervoAdapter(emptyList(), ::onItemClick, ::onDeleteClicked, ::onEditClicked)
@@ -72,6 +78,9 @@ class AdminAcervo : Fragment() {
 
         carregarLivros()
 
+        pesquisa.doAfterTextChanged { text ->
+            pesquisarLivro(text.toString())
+        }
         return view
     }
 
@@ -85,6 +94,17 @@ class AdminAcervo : Fragment() {
                 Log.e("ADMIN_ACERVO", "Erro ao carregar livros: ${e.message}")
             }
         )
+    }
+
+    private fun pesquisarLivro(partial: String){
+        display = mutableListOf()
+        for (livro in listaLivros){
+            val title: String = livro.titulo.toString()
+            if (title.lowercase().startsWith(partial.lowercase())){
+                display.add(livro)
+            }
+        }
+        adapter.updateData(display)
     }
 
     override fun onResume() {

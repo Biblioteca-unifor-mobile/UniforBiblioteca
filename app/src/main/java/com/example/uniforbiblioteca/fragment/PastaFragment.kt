@@ -4,6 +4,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import com.example.uniforbiblioteca.R
@@ -16,14 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uniforbiblioteca.activity.MainActivity
 import com.example.uniforbiblioteca.dataclass.Folder
-import com.example.uniforbiblioteca.dataclass.LivroCardData
 import com.example.uniforbiblioteca.dataclass.LivroData
 import com.example.uniforbiblioteca.dialog.DialogEditarPasta
 import com.example.uniforbiblioteca.dialog.NovoMembroPastaDialog
-import com.example.uniforbiblioteca.fragment.AcervoFragment
-import com.example.uniforbiblioteca.fragment.LivroFragment
-import com.example.uniforbiblioteca.rvadapter.AcervoAdapter
+import com.example.uniforbiblioteca.rvadapter.PastaLivroAdapter
 import com.example.uniforbiblioteca.ui.DialogConfirmarDeletarPasta
+import com.example.uniforbiblioteca.ui.DialogDeletarLivroPasta
 import com.example.uniforbiblioteca.viewmodel.FolderManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -39,6 +38,9 @@ class PastaFragment : Fragment() {
     private lateinit var pastaMembrosBtn: Button
     private lateinit var pastaDeletarBtn: Button
     private lateinit var pastaRv: RecyclerView
+    private lateinit var adapter: PastaLivroAdapter
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +52,8 @@ class PastaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_pasta, container, false)
-
+        FolderManager.currentFolder = pasta
+        FolderManager.currentFolderId = pasta.id.toString()
         pastaFab = view.findViewById(R.id.pasta_fab)
         pastaVoltar = view.findViewById(R.id.pasta_voltar)
         pastaTitulo = view.findViewById(R.id.pasta_titulo)
@@ -71,10 +74,10 @@ class PastaFragment : Fragment() {
         pastaUltimaModificacao.text = pasta.updatedAt
 
         // Converte livros da pasta em LivroCardData
-        val livros = pasta.books ?: mutableListOf()
+        val livros: MutableList<LivroData> = mutableListOf()
 
         // Adapter real
-        val adapter = AcervoAdapter(livros) { livro ->
+        adapter = PastaLivroAdapter(livros, ::onItemLongPress) { livro ->
                 val fragment = LivroFragment.newInstance(livro)
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.mainFragmentContainer, fragment)
@@ -152,6 +155,19 @@ class PastaFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         (activity as? MainActivity)?.changeState("pasta")
+        lifecycleScope.launch {
+            try {
+                getItems()
+            } catch (e: Exception) {
+                Log.e("GET_FOLDER_ITEMS", e.message.toString())
+            }
+        }
+    }
+
+    suspend fun getItems(){
+        FolderManager.selectFolder(pasta.id)
+        pasta = FolderManager.currentFolder!!
+        adapter.updateData(pasta.books)
     }
 
     companion object {
@@ -173,4 +189,26 @@ class PastaFragment : Fragment() {
     suspend fun deletePasta(novo: String){
         FolderManager.deleteFolder(pasta)
     }
+
+    fun onItemLongPress(livro: LivroData){
+        val dialog = DialogDeletarLivroPasta.newInstance(livro) {
+            onItemRemovido()
+        }
+        dialog.show(parentFragmentManager, "confirmarDeletarLivro")
+    }
+
+    fun onItemRemovido() {
+        Log.d("ON_ITEM_REMOVIDO", "onItemRemovido FOI CHAMADO")
+
+        try {
+            val lista = FolderManager.currentFolder?.books
+            Log.d("ON_ITEM_REMOVIDO", "Lista size = ${lista?.size}")
+
+            adapter.updateData(lista!!)
+            Log.d("ON_ITEM_REMOVIDO", "adapter.updateData FOI EXECUTADO")
+        } catch (e: Exception) {
+            Log.e("ON_ITEM_REMOVIDO", "ERRO: ${e.message}", e)
+        }
+    }
+
 }

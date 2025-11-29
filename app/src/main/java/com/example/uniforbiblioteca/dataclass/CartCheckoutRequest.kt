@@ -44,3 +44,19 @@ data class LoanResponse(
     @SerialName("loans") val loans: List<Loan>? = null,
     @SerialName("total") val total: Int? = null
 )
+
+@Serializable
+data class LoanDetail(
+    @SerialName("loanId") val loanId: String,
+    @SerialName("bookId") val bookId: String,
+    @SerialName("titulo") val titulo: String,
+    @SerialName("autor") val autor: String,
+    @SerialName("exemplar") val exemplar: Int,
+    @SerialName("dataEmprestimo") val dataEmprestimo: String, // ou Instant se usar kotlinx-datetime
+    @SerialName("dataLimite") val dataLimite: String,         // ou Instant
+    @SerialName("dataDevolucao") val dataDevolucao: String? = null, // nullable
+    @SerialName("status") val status: String,
+    @SerialName("renovacoes") val renovacoes: Int,
+    @SerialName("estaAtrasado") val estaAtrasado: Boolean,
+    @SerialName("imageUrl") val imageUrl: Boolean? = null
+)

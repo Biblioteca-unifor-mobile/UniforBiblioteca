@@ -1,6 +1,5 @@
 package com.example.uniforbiblioteca.viewmodel
 
-import android.R
 import android.content.Context
 import android.widget.Toast
 import com.example.uniforbiblioteca.dataclass.Folder
@@ -19,12 +18,11 @@ object FolderManager {
 
     private lateinit var api: FolderAPI
     var currentFolder: Folder? = null
-        private set
 
     var currentFolderId: String = ""
-        private set
 
     var folderList: MutableList<Folder> = mutableListOf()
+    var currentFolderChanged = false
 
 
 
@@ -62,10 +60,10 @@ object FolderManager {
     }
 
 
-    suspend fun selectFolder(folderId: String): Folder {
-        val folder = api.getFolderById(folderId)
+    suspend fun selectFolder(folderId: String?): Folder {
+        val folder = api.getFolderById(folderId.orEmpty())
         currentFolder = folder
-        currentFolderId = folderId
+        currentFolderId = folderId.orEmpty()
         return folder
     }
 
@@ -73,6 +71,7 @@ object FolderManager {
         if (currentFolderId.isBlank()) return false
         val folder = api.removeBookFromFolder(currentFolderId, bookId)
         currentFolder = folder
+        updateFolderList()
         return true
     }
 
@@ -80,9 +79,11 @@ object FolderManager {
         if (folder.id == null) return false
         if (book.id == null) return false
         val folder = api.addBookToFolder(folder.id, FolderBook(book.id))
-        if (folder == currentFolder){
+        if (folder.id == currentFolder?.id){
             currentFolder = folder
+            currentFolderChanged = true
         }
+        updateFolderList()
         return true
     }
 

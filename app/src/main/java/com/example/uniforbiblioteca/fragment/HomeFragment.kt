@@ -19,6 +19,7 @@ import com.example.uniforbiblioteca.auth.AuthTokenHandler
 import com.example.uniforbiblioteca.api.CartAPI
 import com.example.uniforbiblioteca.api.LivroAPI
 import com.example.uniforbiblioteca.api.RetrofitClient
+import com.example.uniforbiblioteca.api.UsuarioAPI
 import com.example.uniforbiblioteca.dataclass.LivroCardData
 import com.example.uniforbiblioteca.dataclass.LivroData
 import com.example.uniforbiblioteca.rvadapter.EmprestadoAdapter
@@ -28,7 +29,6 @@ import java.util.Locale
 
 
 class HomeFragment : Fragment() {
-
 
     lateinit var nome: TextView
 
@@ -69,39 +69,10 @@ class HomeFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val livros = listOf(
-            LivroCardData(
-                1,
-                "Livro 1",
-                "Autor 1",
-                "Finaliza: 13 de outubro de 2025",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                2,
-                "Livro 2",
-                "Autor 2",
-                "Finaliza: 13 de outubro de 2025",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                3,
-                "Livro 3",
-                "Autor 3",
-                "Finaliza: 22 de outubro de 2025",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                4,
-                "Livro 4",
-                "Autor 4",
-                "Finaliza: 22 de outubro de 2025",
-                "https://placehold.co/200x300/png"
-            ),
-        )
 
-        val adapter = EmprestadoAdapter(livros) { livro ->
-            verLivro()
+
+        val adapter = EmprestadoAdapter(emptyList()){
+            Log.d("Home", "aaa")
         }
         recyclerView.adapter = adapter
 
@@ -131,9 +102,7 @@ class HomeFragment : Fragment() {
     private fun carregarEmprestimos(adapter: EmprestadoAdapter, recyclerView: RecyclerView) {
         lifecycleScope.launch {
             try {
-                val response = cartAPI.getMyLoans()
-                val loans = response.loans ?: emptyList()
-                
+                val loans = cartAPI.getMyLoans()
                 if (loans.isEmpty()) {
                     txtNenhumEmprestimo.visibility = View.VISIBLE
                     recyclerView.visibility = View.GONE
@@ -143,14 +112,13 @@ class HomeFragment : Fragment() {
                     
                     // Converter Loan para LivroCardData para usar o Adapter existente
                     val emprestados = loans.map { loan ->
-                         val book = loan.bookCopy?.book
                          val dataLimite = formatarData(loan.dataLimite)
                          LivroCardData(
                             id = "0", // ID fake pois LivroCardData usa Int
-                            titulo = book?.titulo ?: "Sem Título",
-                            autor = book?.autor ?: "Sem Autor",
+                            titulo = loan?.titulo ?: "Sem Título",
+                            autor = loan?.autor ?: "Sem Autor",
                             tempo = "Finaliza: $dataLimite",
-                            image = book?.imageUrl ?: "" // Pode ser nulo, Glide trata
+                            image = (loan?.imageUrl ?: "") as String // Pode ser nulo, Glide trata
                          )
                     }
                     adapter.updateData(emprestados)
