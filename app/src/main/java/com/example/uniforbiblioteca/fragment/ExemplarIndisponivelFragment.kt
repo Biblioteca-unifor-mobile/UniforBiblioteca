@@ -7,12 +7,22 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.activity.AdminActivity
+import com.example.uniforbiblioteca.api.LivroAPI
+import com.example.uniforbiblioteca.api.RetrofitClient
+import com.example.uniforbiblioteca.dataclass.ExemplarData
 import com.example.uniforbiblioteca.dialog.EstadoExemplarDialog
 
-class ExemplarIndisponivelFragment : Fragment() {
+class ExemplarIndisponivelFragment(
+    var exemplar: ExemplarData
+) : Fragment() {
+
+    private val livroAPI by lazy {
+        RetrofitClient.create(context).create(LivroAPI::class.java)
+    }
 
     private lateinit var exemplarIndisponivelCapa: ImageView
     private lateinit var exemplarIndisponivelCondicoes: TextView
@@ -44,8 +54,16 @@ class ExemplarIndisponivelFragment : Fragment() {
         }
 
         exemplarIndisponivelEditarBtn.setOnClickListener {
-
-            val dialog = EstadoExemplarDialog()
+            val dialog = EstadoExemplarDialog{ condicao ->
+                try {
+                    val novo = ExemplarData(status = exemplar.status, condition = condicao)
+                    livroAPI.patchBookCopy(exemplar.id!!, novo)
+                    exemplar.condition = novo.condition
+                    Toast.makeText(requireContext(), "Exemplar alterado com sucesso", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception){
+                    Toast.makeText(requireContext(), "Não foi possivel alterar o exemplar", Toast.LENGTH_SHORT).show()
+                }
+            }
             dialog.show(parentFragmentManager, "EstadoExemplar")
         }
 

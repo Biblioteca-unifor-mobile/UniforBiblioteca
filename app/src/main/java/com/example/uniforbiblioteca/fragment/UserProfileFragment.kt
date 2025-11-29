@@ -7,16 +7,25 @@ import android.view.ViewGroup
 import android.widget.Button
 import com.example.uniforbiblioteca.R
 import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uniforbiblioteca.activity.AdminActivity
-import com.example.uniforbiblioteca.dataclass.LivroCardData
+import com.example.uniforbiblioteca.dataclass.LivroData
+import com.example.uniforbiblioteca.dataclass.Usuario
 import com.example.uniforbiblioteca.rvadapter.AcervoAdapter
 import com.example.uniforbiblioteca.rvadapter.HistoricoAdapter
 import com.example.uniforbiblioteca.rvadapter.PastaAdapter
 import com.example.uniforbiblioteca.ui.DialogConfirmarDeletarUser
+import com.example.uniforbiblioteca.viewmodel.UsersManager
+import kotlinx.coroutines.launch
 
 class UserProfileFragment : androidx.fragment.app.Fragment() {
+
+    var user = Usuario("1234567",
+    "Joao", "joao.teste@unifor.br",
+    )
 
     // TextViews
     private lateinit var userName: TextView
@@ -35,6 +44,10 @@ class UserProfileFragment : androidx.fragment.app.Fragment() {
     private lateinit var rvEmprestimos: RecyclerView
     private lateinit var rvReservas: RecyclerView
     private lateinit var rvListas: RecyclerView
+    private lateinit var adapterEmprestimo: HistoricoAdapter
+    private lateinit var adapterReserva: AcervoAdapter
+    private lateinit var adapterListas: PastaAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,69 +74,26 @@ class UserProfileFragment : androidx.fragment.app.Fragment() {
         rvListas.layoutManager = LinearLayoutManager(requireContext())
 
 
-        val emprestados = listOf(
-            LivroCardData(
-                "1",
-                "Livro 1",
-                "Autor 1",
-                "5 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                "2",
-                "Livro 2",
-                "Autor 2",
-                "8 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                "3",
-                "Livro 3",
-                "Autor 3",
-                "8 dias atrás",
-                "https://placehold.co/200x300/png"
-            )
-        )
-
         // Adapter
-        val adapterEmprestimo = HistoricoAdapter(emprestados) { livro ->
+        adapterEmprestimo = HistoricoAdapter(UsersManager.selectedUserEmprestimos) { livro ->
         }
 
         rvEmprestimos.adapter = adapterEmprestimo
 
-        val reservados = listOf(
-            LivroCardData(
-                "1",
-                "Livro 1",
-                "Autor 1",
-                "5 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                "2",
-                "Livro 2",
-                "Autor 2",
-                "8 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                "3",
-                "Livro 3",
-                "Autor 3",
-                "8 dias atrás",
-                "https://placehold.co/200x300/png"
-            )
-        )
-
         // Adapter
-        val adapterReserva = AcervoAdapter(emptyList()) { livro ->
-
+        var livrosReservados: MutableList<LivroData> = mutableListOf()
+        for (reserva in UsersManager.selectedUserReservation){
+            if (reserva.bookCopy == null) continue
+            if (reserva.bookCopy.book == null) continue
+            livrosReservados.add(reserva.bookCopy.book)
+        }
+        adapterReserva = AcervoAdapter(livrosReservados) { livro ->
         }
 
         rvReservas.adapter = adapterReserva
         // Adapter
-        val adapterListas =
-            PastaAdapter(mutableListOf()) { pasta ->
+        adapterListas =
+            PastaAdapter(UsersManager.selectedUserFolders) { pasta ->
             }
 
         rvListas.adapter = adapterListas
@@ -137,16 +107,65 @@ class UserProfileFragment : androidx.fragment.app.Fragment() {
 
         deleteBtn.setOnClickListener {
             DialogConfirmarDeletarUser
-                .newInstance(userName.text.toString())
+                .newInstance(userName.text.toString()){
+                    deleteUser(UsersManager.selectedUser!!)
+                }
                 .show(parentFragmentManager, "confirmarDeletarUser")
         }
 
+        userMatricula.text = "Carregando perfil..."
+        userName.text = ""
+        userEmail.text = ""
 
         return view
+    }
+
+    suspend fun deleteUser(user: Usuario){
+        try {
+            UsersManager.deleteUser(user)
+            parentFragmentManager.popBackStack()
+        } catch(e: Exception){
+            Toast.makeText(requireContext(), "Não foi possivel deletar usuário", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    suspend fun getProfile(){
+        if (UsersManager.selectUser(user)) {
+            userMatricula.text = UsersManager.selectedUser?.matricula
+            userName.text = UsersManager.selectedUser?.nome
+            userEmail.text = UsersManager.selectedUser?.email
+            adapterListas.updateItems(UsersManager.selectedUserFolders)
+            var livrosReservados: MutableList<LivroData> = mutableListOf()
+            for (reserva in UsersManager.selectedUserReservation){
+                if (reserva.bookCopy == null) continue
+                if (reserva.bookCopy.book == null) continue
+                livrosReservados.add(reserva.bookCopy.book)
+            }
+            adapterReserva.updateData(livrosReservados)
+            var livrosEmprestados: MutableList<LivroData> = mutableListOf()
+            for (reserva in UsersManager.selectedUserReservation){
+                if (reserva.bookCopy == null) continue
+                if (reserva.bookCopy.book == null) continue
+                livrosReservados.add(reserva.bookCopy.book)
+            }
+            adapterEmprestimo.updateItems(UsersManager.selectedUserEmprestimos)
+            return
+        }
+        parentFragmentManager.popBackStack()
+    }
+
+    override fun onStop() {
+
+        super.onStop()
+        UsersManager.reset()
     }
 
     override fun onResume() {
         super.onResume()
         (activity as? AdminActivity)?.changeState("User Profile")
+
+        lifecycleScope.launch {
+            getProfile()
+        }
     }
 }

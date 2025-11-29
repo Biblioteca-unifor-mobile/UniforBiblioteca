@@ -25,9 +25,6 @@ object FolderManager {
     var currentFolderChanged = false
 
 
-
-
-
     fun initialize(context: Context) {
         api = RetrofitClient.create(context)
             .create(FolderAPI::class.java)

@@ -52,7 +52,7 @@ class AdminExemplaresFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Inicializa adapter vazio
-        adapter = ExemplarAdapter(emptyList()) { exemplar ->
+        adapter = ExemplarAdapter(mutableListOf()) { exemplar ->
             navegarParaDetalhesExemplar(exemplar)
         }
         recyclerView.adapter = adapter
@@ -83,22 +83,10 @@ class AdminExemplaresFragment : Fragment() {
                 val exemplaresData: List<ExemplarData> = if (bookId != null) {
                      livroAPI.getBookCopiesByBook(bookId)
                 } else {
-
                     livroAPI.getBookCopies()
                 }
-
-
-                val exemplaresUI = exemplaresData.map { data ->
-                    Exemplar(
-                        id = 0, // O adapter usa Int, mas a API retorna String. Ajuste necessário no Adapter futuramente. Por enquanto 0 ou hashCode.
-                        livroId = 0,
-                        num = data.copyNumber ?: 0,
-                        status = data.status ?: "Indisponível",
-                        capa = "https://placehold.co/200x300/png" // URL placeholder ou do livroData?.imageUrl
-                    )
-                }
                 
-                adapter.updateData(exemplaresUI)
+                adapter.updateData(exemplaresData as MutableList<ExemplarData>)
 
             } catch (e: Exception) {
                 Log.e("ADMIN_EXEMPLARES", "Erro ao carregar exemplares: ${e.message}")
@@ -107,12 +95,12 @@ class AdminExemplaresFragment : Fragment() {
         }
     }
 
-    private fun navegarParaDetalhesExemplar(exemplar: Exemplar) {
+    private fun navegarParaDetalhesExemplar(exemplar: ExemplarData) {
         val fragment = when (exemplar.status) {
-            "Disponível", "DISPONIVEL" -> ExemplarDisponivelFragment::class.java
-            "Indisponivel", "INDISPONIVEL" -> ExemplarIndisponivelFragment::class.java
-            "Reservado", "RESERVADO" -> ExemplarReservadoFragment::class.java
-            "Emprestado", "ALUGADO" -> ExemplarAlugadoFragment::class.java
+            "Disponível", "DISPONIVEL" -> ExemplarDisponivelFragment(exemplar)
+            "Indisponivel", "INDISPONIVEL" -> ExemplarIndisponivelFragment(exemplar)
+            "Reservado", "RESERVADO" -> ExemplarReservadoFragment(exemplar)
+            "Emprestado", "ALUGADO" -> ExemplarAlugadoFragment(exemplar)
             else -> null
         }
 

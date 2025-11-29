@@ -114,7 +114,7 @@ class HistoricoFragment : Fragment() {
         )
 
         // Adapter
-        val adapter = HistoricoAdapter(livros) { livro ->
+        val adapter = HistoricoAdapter(mutableListOf()) { livro ->
             parentFragmentManager.beginTransaction()
                 .replace(R.id.mainFragmentContainer, LivroFragment::class.java, null)
                 .addToBackStack(null)

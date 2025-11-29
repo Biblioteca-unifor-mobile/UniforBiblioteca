@@ -26,3 +26,18 @@ data class Folder(
     @SerialName("users") val users: MutableList<FolderUser>? = null,
     @SerialName("books") val books: MutableList<LivroData>? = null
 ): JavaSerializable
+
+@Serializable
+data class UserFolders(
+    @SerialName("data") val data: MutableList<Folder>
+)
+
+@Serializable
+data class UserLoans(
+    @SerialName("data") val data: MutableList<Loan>
+)
+
+@Serializable
+data class UserReservations(
+    @SerialName("data") val data: MutableList<Reservation>
+)

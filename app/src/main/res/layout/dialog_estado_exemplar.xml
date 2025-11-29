@@ -21,8 +21,8 @@
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:gravity="center"
-        android:text="✓ Muito Boa"
-        android:textColor="@color/light_blue_A400" />
+        android:text="Muito Boa"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/boa_condicao"
@@ -32,6 +32,7 @@
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:gravity="center"
+        android:textColor="@color/black"
         android:text="Boa" />
 
     <TextView
@@ -42,6 +43,7 @@
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:gravity="center"
+        android:textColor="@color/black"
         android:text="Conservado" />
 
     <TextView
@@ -51,6 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
+        android:textColor="@color/black"
         android:gravity="center"
         android:text="Ruim" />
 
@@ -61,6 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
+        android:textColor="@color/black"
         android:gravity="center"
         android:text="Muito Ruim" />
 

@@ -64,7 +64,7 @@ class AcervoFragment : Fragment() {
         pesquisa = view.findViewById(R.id.pesquisa)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        adapter = AcervoAdapter(emptyList()) { livro ->
+        adapter = AcervoAdapter(mutableListOf()) { livro ->
             onLivroClicked(livro)
         }
         recyclerView.adapter = adapter

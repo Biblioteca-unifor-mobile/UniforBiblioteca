@@ -7,15 +7,23 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.activity.AdminActivity
+import com.example.uniforbiblioteca.api.LivroAPI
+import com.example.uniforbiblioteca.api.RetrofitClient
+import com.example.uniforbiblioteca.dataclass.Exemplar
+import com.example.uniforbiblioteca.dataclass.ExemplarData
 import com.example.uniforbiblioteca.dialog.EstadoExemplarDialog
 
-class ExemplarAlugadoFragment : Fragment() {
+class ExemplarAlugadoFragment(
+    var exemplar: ExemplarData
+) : Fragment() {
 
-    private lateinit var exemplarAlugadoCapa: ImageView
-    private lateinit var exemplarAlugadoNome: TextView
+    private val livroAPI by lazy {
+        RetrofitClient.create(context).create(LivroAPI::class.java)
+    }
     private lateinit var exemplarAlugadoCondicoes: TextView
     private lateinit var exemplarAlugadoDataEmprestimo: TextView
     private lateinit var exemplarAlugadoDataLimite: TextView
@@ -32,8 +40,18 @@ class ExemplarAlugadoFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_exemplar_alugado, container, false)
 
-        exemplarAlugadoCapa = view.findViewById(R.id.exemplar_alugado_capa)
         exemplarAlugadoNome = view.findViewById(R.id.exemplar_alugado_nome)
+        exemplarAlugadoCondicoes = view.findViewById(R.id.exemplar_alugado_condicoes)
+        exemplarAlugadoDataEmprestimo = view.findViewById(R.id.exemplar_alugado_data_emprestimo)
+        exemplarAlugadoDataLimite = view.findViewById(R.id.exemplar_alugado_data_limite)
+        exemplarAlugadoRenovacoes = view.findViewById(R.id.exemplar_alugado_renovacoes)
+        exemplarAlugadoDivida = view.findViewById(R.id.exemplar_alugado_divida)
+        exemplarAlugadoVerBtn = view.findViewById(R.id.exemplar_alugado_ver_btn)
+        exemplarAlugadoEditarBtn = view.findViewById(R.id.exemplar_alugado_editar_btn)
+        exemplarAlugadoRenovarBtn = view.findViewById(R.id.exemplar_alugado_renovar_btn)
+        exemplarAlugadoDevolverBtn = view.findViewById(R.id.exemplar_alugado_devolver_btn)
+
+        exemplarAlugadoNome = exemplar.
         exemplarAlugadoCondicoes = view.findViewById(R.id.exemplar_alugado_condicoes)
         exemplarAlugadoDataEmprestimo = view.findViewById(R.id.exemplar_alugado_data_emprestimo)
         exemplarAlugadoDataLimite = view.findViewById(R.id.exemplar_alugado_data_limite)
@@ -52,7 +70,16 @@ class ExemplarAlugadoFragment : Fragment() {
         }
 
         exemplarAlugadoEditarBtn.setOnClickListener {
-            val dialog = EstadoExemplarDialog()
+            val dialog = EstadoExemplarDialog{ condicao ->
+                try {
+                    val novo = ExemplarData(status = exemplar.status, condition = condicao)
+                    livroAPI.patchBookCopy(exemplar.id!!, novo)
+                    exemplar.condition = novo.condition
+                    Toast.makeText(requireContext(), "Exemplar alterado com sucesso", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception){
+                    Toast.makeText(requireContext(), "Não foi possivel alterar o exemplar", Toast.LENGTH_SHORT).show()
+                }
+            }
             dialog.show(parentFragmentManager, "EstadoExemplar")
         }
 

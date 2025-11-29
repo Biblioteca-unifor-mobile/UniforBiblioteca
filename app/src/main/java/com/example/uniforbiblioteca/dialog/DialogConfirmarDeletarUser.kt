@@ -8,8 +8,14 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.example.uniforbiblioteca.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class DialogConfirmarDeletarUser : DialogFragment() {
+class DialogConfirmarDeletarUser(
+    private val onDismissCallback: suspend () -> Unit,
+) : DialogFragment() {
+    private val scope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var messageTextView: TextView
     private lateinit var confirmarButton: Button
@@ -32,8 +38,10 @@ class DialogConfirmarDeletarUser : DialogFragment() {
 
         // Listeners
         confirmarButton.setOnClickListener {
-            // TODO: adicionar ação de confirmação
-            dismiss()
+            scope.launch{
+                onDismissCallback()
+                dismiss()
+            }
         }
 
         cancelarButton.setOnClickListener {
@@ -48,8 +56,8 @@ class DialogConfirmarDeletarUser : DialogFragment() {
     companion object {
         private const val ARG_NOME = "arg_nome"
 
-        fun newInstance(nome: String): DialogConfirmarDeletarUser {
-            val dialog = DialogConfirmarDeletarUser()
+        fun newInstance(nome: String?, onDismissCallback: suspend () -> Unit): DialogConfirmarDeletarUser {
+            val dialog = DialogConfirmarDeletarUser(onDismissCallback)
             val args = Bundle()
             args.putString(ARG_NOME, nome)
             dialog.arguments = args

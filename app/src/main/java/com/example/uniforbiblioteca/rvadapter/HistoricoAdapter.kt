@@ -9,10 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.uniforbiblioteca.dataclass.LivroCardData
 import com.example.uniforbiblioteca.R
+import com.example.uniforbiblioteca.dataclass.LivroData
+import com.example.uniforbiblioteca.dataclass.Loan
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 class HistoricoAdapter(
-    private val books: List<LivroCardData>,
-    private val onItemClick: (LivroCardData) -> Unit
+    private val emprestimos: MutableList<Loan>,
+    private val onItemClick: (Loan) -> Unit
 ) : RecyclerView.Adapter<HistoricoAdapter.HistoricoViewHolder>() {
 
     inner class HistoricoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -21,16 +29,25 @@ class HistoricoAdapter(
         private val coverView: ImageView = itemView.findViewById(R.id.imagem_card_historico)
         private val tempoView: TextView = itemView.findViewById(R.id.tempo_card_historico)
 
-        fun bind(livro: LivroCardData) {
-            titleView.text = livro.titulo
-            authorView.text = livro.autor
-            tempoView.text = livro.tempo;
+        fun bind(emprestimo: Loan) {
+            val livro = emprestimo.bookCopy?.book
+            titleView.text = livro?.titulo
+            authorView.text = livro?.autor
+            val dataString = emprestimo.dataEmprestimo
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSS'Z'")
+            val data = LocalDateTime.parse(dataString, formatter)
+            val agora = LocalDateTime.now()
 
-            Glide.with(itemView.context)
-                .load(livro.image)
-                .into(coverView)
+            val tempoDias =  ChronoUnit.DAYS.between(data, agora)
+            tempoView.text = tempoDias.toString() + " dias atrás";
 
-            itemView.setOnClickListener { onItemClick(livro) }
+            if (livro?.imageUrl != null) {
+                Glide.with(itemView.context)
+                    .load(livro.imageUrl)
+                    .into(coverView)
+            }
+
+            itemView.setOnClickListener { onItemClick(emprestimo) }
         }
     }
 
@@ -41,8 +58,14 @@ class HistoricoAdapter(
     }
 
     override fun onBindViewHolder(holder: HistoricoViewHolder, position: Int) {
-        holder.bind(books[position])
+        holder.bind(emprestimos[position])
     }
 
-    override fun getItemCount() = books.size
+    override fun getItemCount() = emprestimos.size
+
+    fun updateItems(items: MutableList<Loan>){
+        emprestimos.clear()
+        emprestimos.addAll(items)
+        notifyDataSetChanged()
+    }
 }

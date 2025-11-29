@@ -12,7 +12,7 @@ import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.dataclass.LivroData
 
 final class AcervoAdapter(
-    private var books: List<LivroData>,
+    private var books: MutableList<LivroData>,
     private val onItemClick: (LivroData) -> Unit
 ) : RecyclerView.Adapter<AcervoAdapter.AcervoViewHolder>() {
 
@@ -51,8 +51,9 @@ final class AcervoAdapter(
     override fun getItemCount() = books.size
 
 
-    fun updateData(newList: List<LivroData>) {
-        books = newList
+    fun updateData(newList: MutableList<LivroData>) {
+        books.clear()
+        books.addAll(newList)
         notifyDataSetChanged()
     }
 }
