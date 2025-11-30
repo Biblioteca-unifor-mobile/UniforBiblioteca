@@ -6,6 +6,7 @@ import com.example.uniforbiblioteca.dataclass.ForgotPasswordResponse
 import com.example.uniforbiblioteca.dataclass.ResetPasswordRequest
 import com.example.uniforbiblioteca.dataclass.ResetPasswordResponse
 import com.example.uniforbiblioteca.dataclass.UserFolders
+import com.example.uniforbiblioteca.dataclass.UserList
 import com.example.uniforbiblioteca.dataclass.UserLoans
 import com.example.uniforbiblioteca.dataclass.UserReservations
 import com.example.uniforbiblioteca.dataclass.Usuario
@@ -16,6 +17,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface UsuarioAPI {
 
@@ -63,4 +65,10 @@ interface UsuarioAPI {
     suspend fun deleteUser(
         @Path("matricula") matricula: String
     ): Unit
+
+    @GET("users/")
+    suspend fun getUsers(
+        @Query("skip") skip: Int = 0,
+        @Query("take") take: Int = 100,
+    ): UserList
 }

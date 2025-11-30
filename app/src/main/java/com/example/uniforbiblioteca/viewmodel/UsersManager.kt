@@ -2,6 +2,7 @@ package com.example.uniforbiblioteca.viewmodel
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import com.example.uniforbiblioteca.api.FolderAPI
 import com.example.uniforbiblioteca.api.RetrofitClient
 import com.example.uniforbiblioteca.api.UsuarioAPI
@@ -24,6 +25,12 @@ object UsersManager {
     fun initialize(context: Context) {
         api = RetrofitClient.create(context)
             .create(UsuarioAPI::class.java)
+    }
+
+    suspend fun getUserList(){
+        val resp = api.getUsers()
+        Log.d("USER_MANAGER", resp.count.toString())
+        userList = resp.data
     }
 
     fun reset(){

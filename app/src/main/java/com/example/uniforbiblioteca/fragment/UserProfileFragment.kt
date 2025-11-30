@@ -21,11 +21,8 @@ import com.example.uniforbiblioteca.ui.DialogConfirmarDeletarUser
 import com.example.uniforbiblioteca.viewmodel.UsersManager
 import kotlinx.coroutines.launch
 
-class UserProfileFragment : androidx.fragment.app.Fragment() {
+class UserProfileFragment(var user: Usuario) : androidx.fragment.app.Fragment() {
 
-    var user = Usuario("1234567",
-    "Joao", "joao.teste@unifor.br",
-    )
 
     // TextViews
     private lateinit var userName: TextView

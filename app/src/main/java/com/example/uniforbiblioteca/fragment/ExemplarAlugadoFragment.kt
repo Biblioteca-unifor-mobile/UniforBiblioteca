@@ -24,6 +24,8 @@ class ExemplarAlugadoFragment(
     private val livroAPI by lazy {
         RetrofitClient.create(context).create(LivroAPI::class.java)
     }
+    private lateinit var exemplarAlugadoCapa: ImageView
+    private lateinit var exemplarAlugadoNome: TextView
     private lateinit var exemplarAlugadoCondicoes: TextView
     private lateinit var exemplarAlugadoDataEmprestimo: TextView
     private lateinit var exemplarAlugadoDataLimite: TextView
@@ -40,6 +42,7 @@ class ExemplarAlugadoFragment(
     ): View? {
         val view = inflater.inflate(R.layout.fragment_exemplar_alugado, container, false)
 
+        exemplarAlugadoCapa = view.findViewById(R.id.exemplar_alugado_capa)
         exemplarAlugadoNome = view.findViewById(R.id.exemplar_alugado_nome)
         exemplarAlugadoCondicoes = view.findViewById(R.id.exemplar_alugado_condicoes)
         exemplarAlugadoDataEmprestimo = view.findViewById(R.id.exemplar_alugado_data_emprestimo)
@@ -51,7 +54,8 @@ class ExemplarAlugadoFragment(
         exemplarAlugadoRenovarBtn = view.findViewById(R.id.exemplar_alugado_renovar_btn)
         exemplarAlugadoDevolverBtn = view.findViewById(R.id.exemplar_alugado_devolver_btn)
 
-        exemplarAlugadoNome = exemplar.
+        exemplarAlugadoCapa = view.findViewById(R.id.exemplar_alugado_capa)
+        exemplarAlugadoNome = view.findViewById(R.id.exemplar_alugado_nome)
         exemplarAlugadoCondicoes = view.findViewById(R.id.exemplar_alugado_condicoes)
         exemplarAlugadoDataEmprestimo = view.findViewById(R.id.exemplar_alugado_data_emprestimo)
         exemplarAlugadoDataLimite = view.findViewById(R.id.exemplar_alugado_data_limite)
@@ -84,11 +88,9 @@ class ExemplarAlugadoFragment(
         }
 
         exemplarAlugadoRenovarBtn.setOnClickListener {
-
         }
 
         exemplarAlugadoDevolverBtn.setOnClickListener {
-
         }
 
         return view

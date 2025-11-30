@@ -5,13 +5,21 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Usuario(
-    @SerialName("_matricula") val matricula: String? = null,
-    @SerialName("_nome") val nome: String? = null,
-    @SerialName("_email") val email: String? = null,
-    @SerialName("_senha") val senha: String? = null,
-    @SerialName("_role") val role: String? = null,
-    @SerialName("_createdAt") val createdAt: String? = null,
-    @SerialName("_updatedAt") val updatedAt: String? = null
+    @SerialName("matricula") val matricula: String? = null,
+    @SerialName("nome") val nome: String? = null,
+    @SerialName("email") val email: String? = null,
+    @SerialName("senha") val senha: String? = null,
+    @SerialName("role") val role: String? = null,
+    @SerialName("createdAt") val createdAt: String? = null,
+    @SerialName("updatedAt") val updatedAt: String? = null
 )
+
+@Serializable
+data class UserList(
+    @SerialName("count") val count: Int = 0,
+    @SerialName("data") val data: MutableList<Usuario> = mutableListOf(),
+)
+
+
 
 

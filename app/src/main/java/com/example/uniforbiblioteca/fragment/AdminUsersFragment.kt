@@ -1,6 +1,7 @@
 package com.example.uniforbiblioteca.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,10 +16,14 @@ import com.example.uniforbiblioteca.activity.AdminActivity
 import com.example.uniforbiblioteca.dataclass.Usuario
 import com.example.uniforbiblioteca.ui.DialogConfirmarDeletarUser
 import com.example.uniforbiblioteca.viewmodel.UsersManager
+import kotlinx.coroutines.launch
 
 
 class AdminUsersFragment : Fragment() {
+    lateinit var adapter: UsersAdapter
 
+    var users = mutableListOf<Usuario>()
+    var display = mutableListOf<Usuario>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,32 +34,45 @@ class AdminUsersFragment : Fragment() {
         val recyclerView: RecyclerView = view.findViewById(R.id.admin_users_rv)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Lista de placeholders
-        val users = listOf(
-            Usuario("1234567", "Joáo")
-        )
-
         // Adapter
-        val adapter = UsersAdapter(users, this::getProfile, this::onDeleteClick)
+        adapter = UsersAdapter(mutableListOf(), this::getProfile, this::onDeleteClick)
 
         recyclerView.adapter = adapter
 
+        lifecycleScope.launch {
+            UsersManager.getUserList()
+            adapter.updateData(UsersManager.userList)
+        }
 
         return view
     }
 
-    suspend fun onDeleteClick(user: Usuario){
+    fun onDeleteClick(user: Usuario){
         DialogConfirmarDeletarUser
             .newInstance(user.nome) {
-                deleteUser(user)
+                try {
+                    deleteUser(user)
+                    Toast.makeText(requireContext(), "User deletado com sucesso", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Log.e("DELETE_USER", e.message.toString())
+                    Toast.makeText(requireContext(), "Náo foi possivel deletar user", Toast.LENGTH_SHORT).show()
+                }
             }
             .show(parentFragmentManager, "confirmarDeletarUser")
+    }
+
+    fun filter(parcial: String){
+        return
     }
 
 
     override fun onResume() {
         super.onResume()
         (activity as? AdminActivity)?.changeState("users")
+        lifecycleScope.launch {
+            UsersManager.getUserList()
+            adapter.updateData(UsersManager.userList)
+        }
     }
 
     suspend fun deleteUser(user: Usuario){
@@ -67,9 +85,8 @@ class AdminUsersFragment : Fragment() {
     }
 
     fun getProfile(user: Usuario){
-
         parentFragmentManager.beginTransaction()
-            .replace(R.id.adminFragmentContainer, UserProfileFragment::class.java, null)
+            .replace(R.id.adminFragmentContainer, UserProfileFragment(user))
             .addToBackStack(null)
             .commit()
         return

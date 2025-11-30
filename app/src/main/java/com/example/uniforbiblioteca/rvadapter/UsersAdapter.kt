@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 
 class UsersAdapter(
-    private val users: List<Usuario>,
+    private val users: MutableList<Usuario>,
     private val onItemClick: (Usuario) -> Unit,
     private val onDeleteClick: suspend (Usuario) -> Unit
 ) : RecyclerView.Adapter<UsersAdapter.UsersViewHolder>() {
@@ -54,4 +54,10 @@ class UsersAdapter(
     }
 
     override fun getItemCount() = users.size
+
+    fun updateData(items: MutableList<Usuario>){
+        users.clear()
+        users.addAll(items)
+        notifyDataSetChanged()
+    }
 }
