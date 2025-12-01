@@ -10,5 +10,6 @@ data class ExemplarData(
     @SerialName("_bookId") val bookId: String? = null,
     @SerialName("_copyNumber") val copyNumber: Int? = null,
     @SerialName("_status") val status: String? = null,
-    @SerialName("_condition") var condition: String? = null
+    @SerialName("_condition") var condition: String? = null,
+    @SerialName("_book") val book: LivroData? = null
 )

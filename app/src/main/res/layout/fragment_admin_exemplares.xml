@@ -56,6 +56,16 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/txt_sem_exemplares"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Ainda não há nenhum exemplar disponível"
+            android:visibility="gone"
+            style="@style/NormalText"
+            android:layout_marginTop="50dp" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/admin_exemplares_rv"
             android:layout_width="match_parent"

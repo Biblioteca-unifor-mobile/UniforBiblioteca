@@ -1,13 +1,12 @@
 package com.example.uniforbiblioteca.dataclass
 
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
-data class CartResponse(
+data class LoanResponse(
     @SerialName("message") val message: String? = null,
-    @SerialName("items") val items: List<CartItem>? = null,
+    @SerialName("loans") val loans: List<Loan>? = null,
     @SerialName("total") val total: Int? = null
 )
-
 

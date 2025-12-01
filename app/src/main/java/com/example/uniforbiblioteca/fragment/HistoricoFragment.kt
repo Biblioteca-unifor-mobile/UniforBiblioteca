@@ -1,6 +1,7 @@
 package com.example.uniforbiblioteca.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +9,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.Button
+import androidx.lifecycle.lifecycleScope
 import com.example.uniforbiblioteca.activity.MainActivity
 import com.example.uniforbiblioteca.R
+import com.example.uniforbiblioteca.api.CartAPI
+import com.example.uniforbiblioteca.api.RetrofitClient
 import com.example.uniforbiblioteca.dataclass.LivroCardData
+import com.example.uniforbiblioteca.dataclass.LivroData
 import com.example.uniforbiblioteca.dialog.HistoricoFilterDialogFragment
 import com.example.uniforbiblioteca.rvadapter.HistoricoAdapter
+import kotlinx.coroutines.launch
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -26,6 +32,12 @@ class HistoricoFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private val cartAPI by lazy {
+        RetrofitClient.create(context).create(CartAPI::class.java)
+    }
+
+    private lateinit var adapter: HistoricoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,84 +58,49 @@ class HistoricoFragment : Fragment() {
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerViewHistorico) // Ajuste o id para o seu XML
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Lista de placeholders
-        val livros = listOf(
-            LivroCardData(
-                "1",
-                "Livro 1",
-                "Autor 1",
-                "5 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                "2",
-                "Livro 2",
-                "Autor 2",
-                "8 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                "3",
-                "Livro 3",
-                "Autor 3",
-                "8 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                "4",
-                "Livro 4",
-                "Autor 4",
-                "30 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                "5",
-                "Livro 5",
-                "Autor 5",
-                "50 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                "6",
-                "Livro 6",
-                "Autor 6",
-                "50 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                "7",
-                "Livro 7",
-                "Autor 7",
-                "70 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                "8",
-                "Livro 8",
-                "Autor 8",
-                "90 dias atrás",
-                "https://placehold.co/200x300/png"
-            ),
-            LivroCardData(
-                "9",
-                "Livro 9",
-                "Autor 9",
-                "90 dias atrás",
-                "https://placehold.co/200x300/png"
-            )
-        )
-
         // Adapter
-        val adapter = HistoricoAdapter(mutableListOf()) { livro ->
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.mainFragmentContainer, LivroFragment::class.java, null)
-                .addToBackStack(null)
-                .commit()
+        adapter = HistoricoAdapter(mutableListOf()) { loan ->
+            // Aqui extraímos o LivroData do Loan para passar para o LivroFragment
+            // Loan -> bookCopy -> book (LoanBook)
+            val loanBook = loan.bookCopy?.book
+            if (loanBook != null) {
+                // Converter LoanBook para LivroData
+                val livro = LivroData(
+                    id = loanBook.id,
+                    titulo = loanBook.titulo,
+                    autor = loanBook.autor,
+                    imageUrl = loanBook.imageUrl
+                    // Outros campos ficam nulos/padrão
+                )
+                
+                // Navegar para detalhes
+                val fragment = LivroFragment.newInstance(livro)
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.mainFragmentContainer, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            } else {
+                Log.e("HISTORICO", "Livro nulo no histórico")
+            }
         }
 
         recyclerView.adapter = adapter
+        
+        carregarHistorico()
 
         return view
+    }
+
+    private fun carregarHistorico() {
+        lifecycleScope.launch {
+            try {
+                // getMyLoans retorna lista de empréstimos (ativos e passados)
+                val loans = cartAPI.getMyLoans()
+                adapter.updateItems(loans.toMutableList())
+            } catch (e: Exception) {
+                Log.e("HISTORICO", "Erro ao carregar histórico: ${e.message}")
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

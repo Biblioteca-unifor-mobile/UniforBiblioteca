@@ -19,13 +19,13 @@ import com.example.uniforbiblioteca.auth.AuthTokenHandler
 import com.example.uniforbiblioteca.api.CartAPI
 import com.example.uniforbiblioteca.api.LivroAPI
 import com.example.uniforbiblioteca.api.RetrofitClient
-import com.example.uniforbiblioteca.api.UsuarioAPI
 import com.example.uniforbiblioteca.dataclass.LivroCardData
 import com.example.uniforbiblioteca.dataclass.LivroData
 import com.example.uniforbiblioteca.rvadapter.EmprestadoAdapter
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.TimeZone
 
 
 class HomeFragment : Fragment() {
@@ -102,7 +102,9 @@ class HomeFragment : Fragment() {
     private fun carregarEmprestimos(adapter: EmprestadoAdapter, recyclerView: RecyclerView) {
         lifecycleScope.launch {
             try {
+                // A API retorna a lista de empréstimos diretamente
                 val loans = cartAPI.getMyLoans()
+                
                 if (loans.isEmpty()) {
                     txtNenhumEmprestimo.visibility = View.VISIBLE
                     recyclerView.visibility = View.GONE
@@ -114,11 +116,12 @@ class HomeFragment : Fragment() {
                     val emprestados = loans.map { loan ->
                          val dataLimite = formatarData(loan.dataLimite)
                          LivroCardData(
-                            id = "0", // ID fake pois LivroCardData usa Int
-                            titulo = loan?.titulo ?: "Sem Título",
-                            autor = loan?.autor ?: "Sem Autor",
+                            id = "0", // ID fake 
+                            titulo = loan.bookCopy?.book?.titulo ?: "Sem Título",
+                            autor = loan.bookCopy?.book?.autor ?: "Sem Autor",
                             tempo = "Finaliza: $dataLimite",
-                            image = (loan?.imageUrl ?: "") as String // Pode ser nulo, Glide trata
+                            image = loan.bookCopy?.book?.imageUrl ?: "",
+                            status = "Emprestado"
                          )
                     }
                     adapter.updateData(emprestados)
@@ -132,14 +135,38 @@ class HomeFragment : Fragment() {
     }
 
     private fun formatarData(dataStr: String?): String {
-        if (dataStr == null) return ""
+        if (dataStr.isNullOrEmpty()) return ""
         try {
-            // Formato que vem da API: "2025-12-05T23:59:59Z"
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
-            val outputFormat = SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale("pt", "BR"))
-            val date = inputFormat.parse(dataStr)
-            return if (date != null) outputFormat.format(date) else dataStr
+            var date: java.util.Date? = null
+            
+            // Tenta primeiro com milissegundos (Formato ISO 8601 completo)
+            // Ex: 2025-12-25T18:00:00.000Z
+            try {
+                val inputFormatMillis = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+                inputFormatMillis.timeZone = TimeZone.getTimeZone("UTC")
+                date = inputFormatMillis.parse(dataStr)
+            } catch (e: Exception) { 
+                // Ignora e tenta o próximo formato
+            }
+
+            // Se falhar, tenta sem milissegundos
+            // Ex: 2025-12-05T23:59:59Z
+            if (date == null) {
+                val inputFormatNoMillis = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+                inputFormatNoMillis.timeZone = TimeZone.getTimeZone("UTC")
+                date = inputFormatNoMillis.parse(dataStr)
+            }
+            
+            // Se ainda falhar, poderia tentar outros formatos ou assumir que date é null
+
+            return if (date != null) {
+                val outputFormat = SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale("pt", "BR"))
+                outputFormat.format(date)
+            } else {
+                dataStr // Retorna original se não conseguir formatar
+            }
         } catch (e: Exception) {
+            Log.e("HOME_FRAGMENT", "Erro na formatação: $dataStr", e)
             return dataStr
         }
     }

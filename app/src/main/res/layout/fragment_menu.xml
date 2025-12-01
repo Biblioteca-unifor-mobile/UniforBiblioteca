@@ -27,7 +27,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Acervo"
+            android:text="Histórico"
             android:textSize="20sp" />
 
         <TextView

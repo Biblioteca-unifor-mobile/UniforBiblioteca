@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.activity.AdminActivity
 import com.example.uniforbiblioteca.api.LivroAPI
@@ -21,6 +23,7 @@ class AdminLivroFragment : Fragment() {
     lateinit var editar: Button
     lateinit var exemplares: Button
     private var livro: LivroData? = null
+    private lateinit var capaImageView: ImageView
 
     private val livroAPI by lazy {
         RetrofitClient.create(context).create(LivroAPI::class.java)
@@ -39,6 +42,7 @@ class AdminLivroFragment : Fragment() {
 
         editar = view.findViewById(R.id.admin_livro_editar)
         exemplares = view.findViewById(R.id.admin_livro_ver_exemplares)
+        capaImageView = view.findViewById(R.id.admin_livro_capa)
 
         // Se tiver o livro passado, exibe inicialmente
         livro?.let {
@@ -59,11 +63,13 @@ class AdminLivroFragment : Fragment() {
         }
 
         editar.setOnClickListener {
-            val fragment = AdminEditLivroFragment.newInstance(livro)
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.adminFragmentContainer, fragment)
-                .addToBackStack(null)
-                .commit()
+            livro?.let { book ->
+                val fragment = AdminEditLivroFragment.newInstance(book)
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.adminFragmentContainer, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
 
         return view
@@ -96,6 +102,17 @@ class AdminLivroFragment : Fragment() {
         tipoView.text = livro.tipo ?: "—"
         tituloView.text = livro.titulo ?: "—"
         autorView.text = livro.autor ?: "—"
+
+        // Carrega imagem da capa usando Glide
+        if (!livro.imageUrl.isNullOrEmpty()) {
+            Glide.with(this)
+                .load(livro.imageUrl)
+                .placeholder(R.drawable.book_cover_placeholder)
+                .error(R.drawable.book_cover_placeholder)
+                .into(capaImageView)
+        } else {
+            capaImageView.setImageResource(R.drawable.book_cover_placeholder)
+        }
 
         val coautores = livro.coAutores ?: emptyList()
         if (coautores.isNotEmpty()) {

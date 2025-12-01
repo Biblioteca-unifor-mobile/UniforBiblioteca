@@ -24,9 +24,12 @@ final class AcervoAdapter(
             titleView.text = livro.titulo
             autorView.text = livro.autor
 
-            if (livro.imageUrl.toBoolean()) {
+            // Correção: Verificar se a URL não é nula ou vazia
+            if (!livro.imageUrl.isNullOrEmpty()) {
                 Glide.with(itemView.context)
                     .load(livro.imageUrl)
+                    .placeholder(R.drawable.book_cover_placeholder) // Opcional: mostra enquanto carrega
+                    .error(R.drawable.book_cover_placeholder) // Opcional: mostra se falhar
                     .into(coverView)
             } else {
                 coverView.setImageResource(R.drawable.book_cover_placeholder)

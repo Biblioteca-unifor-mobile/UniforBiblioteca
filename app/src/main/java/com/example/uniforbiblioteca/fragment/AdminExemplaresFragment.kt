@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -27,6 +28,7 @@ class AdminExemplaresFragment : Fragment() {
     lateinit var newFAB: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ExemplarAdapter
+    private lateinit var txtSemExemplares: TextView
 
     private var livroData: LivroData? = null
 
@@ -49,6 +51,8 @@ class AdminExemplaresFragment : Fragment() {
 
         newFAB = view.findViewById(R.id.admin_exemplares_fab)
         recyclerView = view.findViewById(R.id.admin_exemplares_rv)
+        txtSemExemplares = view.findViewById(R.id.txt_sem_exemplares)
+        
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Inicializa adapter vazio
@@ -86,7 +90,14 @@ class AdminExemplaresFragment : Fragment() {
                     livroAPI.getBookCopies()
                 }
                 
-                adapter.updateData(exemplaresData as MutableList<ExemplarData>)
+                if (exemplaresData.isEmpty()) {
+                    txtSemExemplares.visibility = View.VISIBLE
+                    recyclerView.visibility = View.GONE
+                } else {
+                    txtSemExemplares.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
+                    adapter.updateData(exemplaresData as MutableList<ExemplarData>)
+                }
 
             } catch (e: Exception) {
                 Log.e("ADMIN_EXEMPLARES", "Erro ao carregar exemplares: ${e.message}")

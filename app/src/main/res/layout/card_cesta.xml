@@ -55,6 +55,8 @@
             android:paddingTop="0dp"
             android:paddingRight="0dp"
             android:paddingBottom="0dp"
+            android:clickable="true"
+            android:focusable="true"
             android:tag="com.google.android.material.button.MaterialButton"
             app:cornerRadius="25dp"
             app:icon="@android:drawable/ic_menu_close_clear_cancel"

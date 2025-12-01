@@ -14,12 +14,5 @@ data class Usuario(
     @SerialName("updatedAt") val updatedAt: String? = null
 )
 
-@Serializable
-data class UserList(
-    @SerialName("count") val count: Int = 0,
-    @SerialName("data") val data: MutableList<Usuario> = mutableListOf(),
-)
-
-
 
 

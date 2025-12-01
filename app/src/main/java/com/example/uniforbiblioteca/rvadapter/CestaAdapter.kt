@@ -3,6 +3,7 @@ package com.example.uniforbiblioteca.rvadapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -19,9 +20,7 @@ class CestaAdapter(
         private val titleView: TextView = itemView.findViewById(R.id.titulo_card_cesta)
         private val autorView: TextView = itemView.findViewById(R.id.autor_card_cesta)
         private val coverView: ImageView = itemView.findViewById(R.id.imagem_card_cesta)
-        // Assumindo que possa haver um botão de deletar no layout card_cesta, ou usamos swipe.
-        // Se não tiver, podemos adicionar um clique longo ou apenas clique normal.
-        // Mas o card_cesta geralmente é simples. Vou adicionar um clique longo para deletar.
+        private val deleteBtn: Button = itemView.findViewById(R.id.deletCestaBtn)
 
         fun bind(item: CartItem) {
             val livro = item.book
@@ -30,12 +29,18 @@ class CestaAdapter(
 
             if (!livro?.imageUrl.isNullOrEmpty()) {
                 Glide.with(itemView.context)
-                    .load(livro?.imageUrl)
+                    .load(livro.imageUrl)
                     .into(coverView)
             } else {
                 coverView.setImageResource(R.drawable.book_cover_placeholder)
             }
 
+            // Listener no botão X
+            deleteBtn.setOnClickListener {
+                onDeleteClick(item)
+            }
+
+            // Opcional: Manter o long click como alternativa
             itemView.setOnLongClickListener {
                 onDeleteClick(item)
                 true

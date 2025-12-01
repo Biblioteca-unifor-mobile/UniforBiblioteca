@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.activity.MainActivity
 import com.example.uniforbiblioteca.api.CartAPI
@@ -32,6 +34,7 @@ class LivroFragment : Fragment() {
     private lateinit var addACesta: Button
     private lateinit var addAPasta: Button
     private lateinit var voltar: Button
+    private lateinit var capaImageView: ImageView
 
     private var livro: LivroData? = null
     private var quantidadeDisponivel = 0
@@ -58,6 +61,7 @@ class LivroFragment : Fragment() {
         addACesta = view.findViewById(R.id.addaCesta)
         addAPasta = view.findViewById(R.id.addaPasta)
         voltar = view.findViewById(R.id.livro_voltar)
+        capaImageView = view.findViewById(R.id.livro_capa)
 
         livro?.let {
             atualizarCampos(view, it)
@@ -119,6 +123,17 @@ class LivroFragment : Fragment() {
         tipoView.text = livro.tipo ?: "—"
         tituloView.text = livro.titulo ?: "—"
         autorView.text = livro.autor ?: "—"
+
+        // Carrega imagem da capa usando Glide
+        if (!livro.imageUrl.isNullOrEmpty()) {
+            Glide.with(this)
+                .load(livro.imageUrl)
+                .placeholder(R.drawable.book_cover_placeholder)
+                .error(R.drawable.book_cover_placeholder)
+                .into(capaImageView)
+        } else {
+            capaImageView.setImageResource(R.drawable.book_cover_placeholder)
+        }
 
         val coautores = livro.coAutores ?: emptyList()
         if (coautores.isNotEmpty()) {

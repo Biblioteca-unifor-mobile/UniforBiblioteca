@@ -35,24 +35,32 @@
 
         <TextView
             android:id="@+id/titulo_card_historico"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:text="Titulo"
             style="@style/TitleText"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@+id/imagem_card_historico"
+            app:layout_constraintEnd_toStartOf="@+id/tempo_card_historico"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/autor_card_historico"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:text="Autor"
             style="@style/LightText"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@+id/imagem_card_historico"
+            app:layout_constraintEnd_toStartOf="@+id/tempo_card_historico"
             app:layout_constraintTop_toBottomOf="@+id/titulo_card_historico" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

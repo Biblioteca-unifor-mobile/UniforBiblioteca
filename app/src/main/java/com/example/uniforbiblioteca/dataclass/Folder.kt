@@ -5,17 +5,7 @@ import kotlinx.serialization.Serializable
 import java.io.Serializable as JavaSerializable
 
 
-@Serializable
-data class FolderUser(
-    @SerialName("folderId") val folderId: String? = null,
-    @SerialName("userMatricula") val matricula: String? = null,
-    @SerialName("role") val role: String? = null,
-)
 
-@Serializable
-data class FolderBook(
-    @SerialName("bookId") val bookId: String? = null,
-)
 
 @Serializable
 data class Folder(
@@ -26,18 +16,3 @@ data class Folder(
     @SerialName("users") val users: MutableList<FolderUser>? = null,
     @SerialName("books") val books: MutableList<LivroData>? = null
 ): JavaSerializable
-
-@Serializable
-data class UserFolders(
-    @SerialName("data") val data: MutableList<Folder>
-)
-
-@Serializable
-data class UserLoans(
-    @SerialName("data") val data: MutableList<Loan>
-)
-
-@Serializable
-data class UserReservations(
-    @SerialName("data") val data: MutableList<Reservation>
-)

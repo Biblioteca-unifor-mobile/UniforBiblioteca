@@ -81,8 +81,17 @@ class UserProfileFragment(var user: Usuario) : androidx.fragment.app.Fragment() 
         var livrosReservados: MutableList<LivroData> = mutableListOf()
         for (reserva in UsersManager.selectedUserReservation){
             if (reserva.bookCopy == null) continue
-            if (reserva.bookCopy.book == null) continue
-            livrosReservados.add(reserva.bookCopy.book)
+            val loanBook = reserva.bookCopy.book
+            if (loanBook != null) {
+                // Conversão manual de LoanBook para LivroData
+                val livroData = LivroData(
+                    id = loanBook.id,
+                    titulo = loanBook.titulo,
+                    autor = loanBook.autor,
+                    imageUrl = loanBook.imageUrl
+                )
+                livrosReservados.add(livroData)
+            }
         }
         adapterReserva = AcervoAdapter(livrosReservados) { livro ->
         }
@@ -135,16 +144,25 @@ class UserProfileFragment(var user: Usuario) : androidx.fragment.app.Fragment() 
             var livrosReservados: MutableList<LivroData> = mutableListOf()
             for (reserva in UsersManager.selectedUserReservation){
                 if (reserva.bookCopy == null) continue
-                if (reserva.bookCopy.book == null) continue
-                livrosReservados.add(reserva.bookCopy.book)
+                val loanBook = reserva.bookCopy.book
+                if (loanBook != null) {
+                    // Conversão manual de LoanBook para LivroData
+                    val livroData = LivroData(
+                        id = loanBook.id,
+                        titulo = loanBook.titulo,
+                        autor = loanBook.autor,
+                        imageUrl = loanBook.imageUrl
+                    )
+                    livrosReservados.add(livroData)
+                }
             }
             adapterReserva.updateData(livrosReservados)
             var livrosEmprestados: MutableList<LivroData> = mutableListOf()
-            for (reserva in UsersManager.selectedUserReservation){
-                if (reserva.bookCopy == null) continue
-                if (reserva.bookCopy.book == null) continue
-                livrosReservados.add(reserva.bookCopy.book)
-            }
+            // O loop abaixo parece redundante ou incorreto se a intenção era popular adapterEmprestimo
+            // adapterEmprestimo espera MutableList<Loan>, não LivroData.
+            // Vou manter a lógica original do arquivo mas corrigindo a conversão se fosse necessário,
+            // mas aqui parece que adapterEmprestimo usa UsersManager.selectedUserEmprestimos diretamente.
+            
             adapterEmprestimo.updateItems(UsersManager.selectedUserEmprestimos)
             return
         }

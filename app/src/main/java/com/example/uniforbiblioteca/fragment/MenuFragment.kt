@@ -8,10 +8,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.example.uniforbiblioteca.activity.MainActivity
-import com.example.uniforbiblioteca.fragment.AcervoFragment
+import com.example.uniforbiblioteca.R
 import com.example.uniforbiblioteca.fragment.ChatFragment
 import com.example.uniforbiblioteca.fragment.ConfigFragment
 import com.example.uniforbiblioteca.fragment.ContatoFragment
+import com.example.uniforbiblioteca.fragment.HistoricoFragment
 
 
 class MenuFragment : androidx.fragment.app.Fragment() {
@@ -20,7 +21,7 @@ class MenuFragment : androidx.fragment.app.Fragment() {
     lateinit var contatoBtn: TextView
     lateinit var chatBtn: TextView
     lateinit var configBtn: TextView
-    lateinit var acervoBtn: TextView
+    lateinit var historicoBtn: TextView
     lateinit var voltar: Button
 
 
@@ -30,7 +31,7 @@ class MenuFragment : androidx.fragment.app.Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(_root_ide_package_.com.example.uniforbiblioteca.R.layout.fragment_menu, container, false)
+        return inflater.inflate(R.layout.fragment_menu, container, false)
     }
 
 
@@ -42,38 +43,38 @@ class MenuFragment : androidx.fragment.app.Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        contatoBtn = view.findViewById(_root_ide_package_.com.example.uniforbiblioteca.R.id.menuContatoBtn)
-        chatBtn = view.findViewById(_root_ide_package_.com.example.uniforbiblioteca.R.id.menuChatBtn)
-        configBtn = view.findViewById(_root_ide_package_.com.example.uniforbiblioteca.R.id.menuConfigButton)
-        acervoBtn = view.findViewById(_root_ide_package_.com.example.uniforbiblioteca.R.id.menuAcervoButton)
-        voltar = view.findViewById(_root_ide_package_.com.example.uniforbiblioteca.R.id.voltar_menu)
+        contatoBtn = view.findViewById(R.id.menuContatoBtn)
+        chatBtn = view.findViewById(R.id.menuChatBtn)
+        configBtn = view.findViewById(R.id.menuConfigButton)
+        historicoBtn = view.findViewById(R.id.menuAcervoButton)
+        voltar = view.findViewById(R.id.voltar_menu)
 
 
         chatBtn.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(_root_ide_package_.com.example.uniforbiblioteca.R.id.mainFragmentContainer, ChatFragment::class.java, null)
+                .replace(R.id.mainFragmentContainer, ChatFragment::class.java, null)
                 .addToBackStack("menu")
                 .commit()
         }
 
         contatoBtn.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(_root_ide_package_.com.example.uniforbiblioteca.R.id.mainFragmentContainer, ContatoFragment::class.java, null)
+                .replace(R.id.mainFragmentContainer, ContatoFragment::class.java, null)
                 .addToBackStack("menu")
                 .commit()
         }
 
         configBtn.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(_root_ide_package_.com.example.uniforbiblioteca.R.id.mainFragmentContainer, ConfigFragment::class.java, null)
+                .replace(R.id.mainFragmentContainer, ConfigFragment::class.java, null)
                 .addToBackStack("menu")
                 .commit()
         }
 
-        acervoBtn.setOnClickListener {
-            (activity as? MainActivity)?.changeState("acervo")
+        historicoBtn.setOnClickListener {
+            (activity as? MainActivity)?.changeState("historico")
             parentFragmentManager.beginTransaction()
-                .replace(_root_ide_package_.com.example.uniforbiblioteca.R.id.mainFragmentContainer, AcervoFragment::class.java, null)
+                .replace(R.id.mainFragmentContainer, HistoricoFragment::class.java, null)
                 .addToBackStack("menu")
                 .commit()
         }

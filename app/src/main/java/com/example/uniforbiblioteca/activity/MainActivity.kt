@@ -21,6 +21,7 @@ import com.example.uniforbiblioteca.api.LivroAPI
 import com.example.uniforbiblioteca.api.RetrofitClient
 import com.example.uniforbiblioteca.fragment.HistoricoFragment
 import com.example.uniforbiblioteca.fragment.HomeFragment
+import com.example.uniforbiblioteca.fragment.AcervoFragment
 import com.example.uniforbiblioteca.viewmodel.AccessibilityManager
 import com.example.uniforbiblioteca.viewmodel.FolderManager
 import com.example.uniforbiblioteca.viewmodel.FontManager
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
 
     lateinit var homeBtn: MaterialButton
-    lateinit var historicoBtn: MaterialButton
+    lateinit var acervoBtn: MaterialButton
     lateinit var pastasBtn: MaterialButton
     lateinit var menuBtn: MaterialButton
     lateinit var fm: FragmentManager
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         homeBtn = findViewById(R.id.homeButton)
-        historicoBtn = findViewById(R.id.historicoBtn)
+        acervoBtn = findViewById(R.id.historicoBtn)
         pastasBtn = findViewById(R.id.pastasBtn)
         menuBtn = findViewById(R.id.menuBtn)
         fm = supportFragmentManager
@@ -70,11 +71,9 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.mainFragmentContainer, HomeFragment::class.java, null)
                 .commit()
         }
-
-
-        historicoBtn.setOnClickListener {
+        acervoBtn.setOnClickListener {
             fm.beginTransaction()
-                .replace(R.id.mainFragmentContainer, HistoricoFragment::class.java, null)
+                .replace(R.id.mainFragmentContainer, AcervoFragment::class.java, null)
                 .commit()
         }
         pastasBtn.setOnClickListener {
@@ -95,23 +94,27 @@ class MainActivity : AppCompatActivity() {
 
         if (state == "home"){
             homeBtn.iconTint = ContextCompat.getColorStateList(this, R.color.grey)
-            historicoBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
+            acervoBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
             pastasBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
+            menuBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
             showBottomNav()
-        } else if (state == "historico"){
+        } else if (state == "historico" || state == "chat"){
             homeBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
-            historicoBtn.iconTint = ContextCompat.getColorStateList(this, R.color.grey)
+            acervoBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
             pastasBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
+            menuBtn.iconTint = ContextCompat.getColorStateList(this, R.color.grey)
             showBottomNav()
         } else if (state == "pastas" || state == "pasta" ) {
             homeBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
-            historicoBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
+            acervoBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
             pastasBtn.iconTint = ContextCompat.getColorStateList(this, R.color.grey)
+            menuBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
             showBottomNav()
         } else if (state == "acervo") {
             homeBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
-            historicoBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
+            acervoBtn.iconTint = ContextCompat.getColorStateList(this, R.color.grey)
             pastasBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
+            menuBtn.iconTint = ContextCompat.getColorStateList(this, R.color.black)
             showBottomNav()
         } else {
             hideBottomNav()

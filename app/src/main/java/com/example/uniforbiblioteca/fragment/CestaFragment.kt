@@ -1,5 +1,7 @@
 package com.example.uniforbiblioteca.fragment
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,7 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +22,7 @@ import com.example.uniforbiblioteca.api.RetrofitClient
 import com.example.uniforbiblioteca.dataclass.CartCheckoutRequest
 import com.example.uniforbiblioteca.dataclass.CartItem
 import com.example.uniforbiblioteca.rvadapter.CestaAdapter
-import com.example.uniforbiblioteca.ui.DialogWarningConfirmar
+import com.example.uniforbiblioteca.dialog.DialogConfirmarPedido
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -32,6 +36,7 @@ class CestaFragment : Fragment() {
     lateinit var addFAB: FloatingActionButton
 
     lateinit var confirmarBtn: Button
+    lateinit var txtVazio: TextView
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CestaAdapter
@@ -44,6 +49,8 @@ class CestaFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_cesta, container, false)
 
         recyclerView = view.findViewById(R.id.cestaRecyclerView)
+        txtVazio = view.findViewById(R.id.txt_cesta_vazia)
+        
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         adapter = CestaAdapter(emptyList()) { item ->
@@ -70,7 +77,17 @@ class CestaFragment : Fragment() {
         confirmarBtn = view.findViewById(R.id.continuar_cesta)
 
         confirmarBtn.setOnClickListener {
-            realizarCheckout()
+            val dialog = DialogConfirmarPedido.newInstance(false)
+            dialog.show(parentFragmentManager, "ConfirmarPedido")
+        }
+
+        // Listener para atualizar a cesta quando o checkout for concluído com sucesso no dialog
+        parentFragmentManager.setFragmentResultListener("checkout_key", viewLifecycleOwner) { _, bundle ->
+            val success = bundle.getBoolean("success")
+            if (success) {
+                carregarCesta() // Recarrega (deve vir vazio)
+                // Opcional: navegar para outra tela ou mostrar feedback
+            }
         }
 
         carregarCesta()
@@ -81,9 +98,22 @@ class CestaFragment : Fragment() {
     private fun carregarCesta() {
         lifecycleScope.launch {
             try {
-                val response = cartAPI.getCart()
-                val items = response.items ?: emptyList()
-                adapter.updateData(items)
+                // API agora retorna a lista de itens diretamente (List<CartItem>)
+                val items = cartAPI.getCart()
+                
+                if (items.isEmpty()) {
+                    txtVazio.visibility = View.VISIBLE
+                    recyclerView.visibility = View.GONE
+                    confirmarBtn.isEnabled = false
+                    confirmarBtn.backgroundTintList = ColorStateList.valueOf(Color.GRAY)
+                } else {
+                    txtVazio.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
+                    confirmarBtn.isEnabled = true
+                    // Usa uma cor azul padrão já que R.color.blue não existe
+                    confirmarBtn.backgroundTintList = ColorStateList.valueOf(Color.BLUE) 
+                    adapter.updateData(items)
+                }
             } catch (e: Exception) {
                 Log.e("CESTA_FRAGMENT", "Erro ao carregar cesta", e)
                 Toast.makeText(context, "Erro ao carregar cesta", Toast.LENGTH_SHORT).show()
@@ -105,7 +135,8 @@ class CestaFragment : Fragment() {
         }
     }
 
-    private fun realizarCheckout() {
+    // Função mantida pública caso o Dialog precise chamá-la no futuro (se implementada interface)
+    fun realizarCheckout() {
         // Data limite padrão (ex: 15 dias)
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DAY_OF_YEAR, 15)
@@ -122,7 +153,7 @@ class CestaFragment : Fragment() {
                 
                 // Limpa a tela ou navega para home
                 adapter.updateData(emptyList())
-                parentFragmentManager.popBackStack() // Volta para tela anterior (provavelmente Home)
+                parentFragmentManager.popBackStack() // Volta para tela anterior
                 
             } catch (e: Exception) {
                 Log.e("CESTA_FRAGMENT", "Erro no checkout", e)

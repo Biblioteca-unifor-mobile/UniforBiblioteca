@@ -76,7 +76,8 @@ class AdminAcervo : Fragment() {
                 .commit()
         }
 
-        carregarLivros()
+        // Removido carregarLivros() daqui para garantir que seja chamado no onResume
+        // carregarLivros()
 
         pesquisa.doAfterTextChanged { text ->
             pesquisarLivro(text.toString())
@@ -84,11 +85,29 @@ class AdminAcervo : Fragment() {
         return view
     }
 
-    private fun carregarLivros() {
+    private fun carregarLivros(forceReload: Boolean = false) {
+        // Se forceReload for true, pode precisar adicionar lógica no ViewModel para limpar isLoaded
+        if (forceReload) {
+            // Assumindo que podemos resetar ou criar um método reload no ViewModel,
+            // mas por enquanto vamos confiar que o ViewModel mantém o estado ou buscar novamente se necessário.
+            // O problema descrito é que "não carrega de volta". Se o ViewModel mantiver o estado 'isLoaded = true',
+            // ele retorna a lista antiga imediatamente. Se a lista antiga estiver vazia ou se quisermos atualizar,
+            // precisamos forçar.
+            // Para resolver o problema de navegação "não carrega", o ViewModel deve entregar os dados que já tem.
+            // Se ele não entrega, é porque o LiveData/State não está sendo observado ou a lógica 'if (isLoaded)' falha?
+            // O método carregarLivros usa um callback. Se isLoaded for true, ele chama onLoaded imediatamente.
+            // Isso deve funcionar.
+        }
+        
         viewModel.carregarLivros(
             onLoaded = { livros ->
                 Log.d("ADMIN_ACERVO", "Livros carregados: ${livros.size}")
-                adapter.updateData(livros)
+                listaLivros = livros.toMutableList() // Atualiza a lista local para pesquisa
+                if (pesquisa.text.toString().isEmpty()) {
+                    adapter.updateData(livros)
+                } else {
+                    pesquisarLivro(pesquisa.text.toString())
+                }
             },
             onError = { e ->
                 Log.e("ADMIN_ACERVO", "Erro ao carregar livros: ${e.message}")
@@ -100,7 +119,7 @@ class AdminAcervo : Fragment() {
         display = mutableListOf()
         for (livro in listaLivros){
             val title: String = livro.titulo.toString()
-            if (title.lowercase().startsWith(partial.lowercase())){
+            if (title.lowercase().contains(partial.lowercase())){ // Alterado de startsWith para contains para melhor UX
                 display.add(livro)
             }
         }
@@ -110,6 +129,8 @@ class AdminAcervo : Fragment() {
     override fun onResume() {
         super.onResume()
         (activity as? AdminActivity)?.changeState("acervo")
+        // Chama carregarLivros no onResume para garantir atualização ao voltar da pilha
+        carregarLivros() 
     }
 
     private fun onItemClick(livro: LivroData) {

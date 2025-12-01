@@ -30,9 +30,11 @@ class AdminAcervoAdapter(
             titleView.text = livro.titulo
             autorView.text = livro.autor
 
-            if (livro.imageUrl.toBoolean()) {
+            if (!livro.imageUrl.isNullOrEmpty()) {
                 Glide.with(itemView.context)
                     .load(livro.imageUrl)
+                    .placeholder(R.drawable.book_cover_placeholder)
+                    .error(R.drawable.book_cover_placeholder)
                     .into(coverView)
             } else {
                 coverView.setImageResource(R.drawable.book_cover_placeholder)
